@@ -111,5 +111,14 @@ export function createServer() {
   app.delete("/api/admin/medicines/:id", checkAdmin, handleDeleteMedicine);
   app.get("/api/admin/sos-requests", checkAdmin, handleGetSOSRequests);
 
+  // Global JSON Error Handler (Must be registered last)
+  app.use((err: any, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
+    console.error("API Server Error:", err);
+    res.status(500).json({
+      error: err.message || "Internal Server Error",
+      code: err.code || "SERVER_ERROR",
+    });
+  });
+
   return app;
 }
