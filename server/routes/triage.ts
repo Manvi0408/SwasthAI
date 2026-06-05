@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import { db } from "../db";
+import { db } from "../db.js";
 
 export const handleTriage: RequestHandler = async (req, res) => {
   const { symptoms, userId } = req.body;

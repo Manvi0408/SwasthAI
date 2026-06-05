@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import { db } from "../db";
+import { db } from "../db.js";
 
 export const handleGetBloodBanks: RequestHandler = async (req, res) => {
   const { city, state, bloodGroup, userId } = req.query;

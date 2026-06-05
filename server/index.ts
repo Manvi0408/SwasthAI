@@ -12,17 +12,17 @@ import {
   handleGetMe,
   handleOnboard,
   handleUpdateProfile,
-} from "./routes/auth";
+} from "./routes/auth.js";
 
 // Hospital handlers
 import {
   handleGetHospitals,
   handleSaveHospital,
   handleUnsaveHospital,
-} from "./routes/hospitals";
+} from "./routes/hospitals.js";
 
 // Blood bank handlers
-import { handleGetBloodBanks } from "./routes/blood-banks";
+import { handleGetBloodBanks } from "./routes/blood-banks.js";
 
 // Pharmacy handlers
 import {
@@ -30,13 +30,13 @@ import {
   handleSaveMedicine,
   handleUnsaveMedicine,
   handleGetPharmacies,
-} from "./routes/pharmacy";
+} from "./routes/pharmacy.js";
 
 // Triage handlers
-import { handleTriage } from "./routes/triage";
+import { handleTriage } from "./routes/triage.js";
 
 // Emergency handlers
-import { handleEmergencySos } from "./routes/emergency";
+import { handleEmergencySos } from "./routes/emergency.js";
 
 // Admin handlers
 import {
@@ -51,7 +51,7 @@ import {
   handleAddMedicine,
   handleDeleteMedicine,
   handleGetSOSRequests,
-} from "./routes/admin";
+} from "./routes/admin.js";
 
 export function createServer() {
   const app = express();

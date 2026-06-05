@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import { db } from "../db";
+import { db } from "../db.js";
 
 // Middleware to verify admin authorization
 export const checkAdmin: RequestHandler = async (req, res, next) => {

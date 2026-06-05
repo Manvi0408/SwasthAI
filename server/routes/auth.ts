@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import { db } from "../db";
+import { db } from "../db.js";
 
 // In-memory store for OTPs: phone -> otp
 const otpStore = new Map<string, string>();

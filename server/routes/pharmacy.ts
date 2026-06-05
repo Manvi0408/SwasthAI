@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import { db } from "../db";
+import { db } from "../db.js";
 
 export const handleGetMedicines: RequestHandler = async (req, res) => {
   const { query, userId } = req.query;
