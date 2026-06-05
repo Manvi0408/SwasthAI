@@ -1,0 +1,193 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:../dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id                String             @id @default(uuid())
+  email             String?            @unique
+  phone             String?            @unique
+  password          String?            // Hashed password for email auth
+  role              String             @default("USER") // USER, ADMIN
+  language          String             @default("en")
+  theme             String             @default("light")
+  onboarded         Boolean            @default(false)
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  
+  profile           Profile?
+  medicalInfo       MedicalInfo?
+  emergencyContact  EmergencyContact?
+  locationInfo      LocationInfo?
+  searchHistory     SearchHistory[]
+  triageHistory     AiTriageHistory[]
+  emergencyRequests EmergencyRequest[]
+  savedHospitals    SavedHospital[]
+  savedMedicines    SavedMedicine[]
+}
+
+model Profile {
+  id         String   @id @default(uuid())
+  userId     String   @unique
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  fullName   String
+  profilePic String?
+  dob        String?
+  age        Int?
+  gender     String?
+}
+
+model MedicalInfo {
+  id         String   @id @default(uuid())
+  userId     String   @unique
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bloodGroup String
+  height     Float?
+  weight     Float?
+  diseases   String?  // Comma separated list of existing diseases
+  allergies  String?  // Comma separated list of allergies
+  medications String? // Comma separated list of current medications
+  disability String?  // Disability information
+}
+
+model EmergencyContact {
+  id           String   @id @default(uuid())
+  userId       String   @unique
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name         String
+  phone        String
+  relationship String
+}
+
+model LocationInfo {
+  id       String @id @default(uuid())
+  userId   String @unique
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  country  String @default("India")
+  state    String
+  city     String
+  pincode  String
+  lat      Float?
+  lng      Float?
+}
+
+model SearchHistory {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      String   // HOSPITAL, BLOOD_BANK, PHARMACY
+  query     String
+  filters   String?  // JSON string of active filters
+  timestamp DateTime @default(now())
+}
+
+model AiTriageHistory {
+  id           String   @id @default(uuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  symptoms     String
+  conditions   String   // JSON string of possible conditions
+  severity     String   // High, Medium, Low
+  action       String   // Recommended action
+  hospitalType String   // Type of hospital to visit
+  timestamp    DateTime @default(now())
+}
+
+model EmergencyRequest {
+  id        String   @id @default(uuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  category  String   // Cardiac, Accident, Stroke, etc.
+  status    String   @default("PENDING") // PENDING, RESPONDING, RESOLVED
+  lat       Float
+  lng       Float
+  address   String?
+  timestamp DateTime @default(now())
+}
+
+model SavedHospital {
+  id         String   @id @default(uuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  hospitalId String
+  name       String
+  address    String
+  distance   String
+  contact    String
+  rating     Float
+  services   String   // Comma separated list of services
+  timestamp  DateTime @default(now())
+}
+
+model SavedMedicine {
+  id            String   @id @default(uuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  medicineId    String
+  name          String
+  brandPrice    Float
+  genericPrice  Float
+  savings       Float
+  availability  String
+  timestamp     DateTime @default(now())
+}
+
+// Master resource datasets
+model Hospital {
+  id       String @id @default(uuid())
+  name     String
+  address  String
+  type     String // AIIMS, Government, Private, Trauma Center, Cardiac Center, Emergency Center
+  services String // Comma separated list
+  beds     String
+  rating   Float
+  phone    String
+  lat      Float
+  lng      Float
+}
+
+model BloodBank {
+  id       String @id @default(uuid())
+  name     String
+  address  String
+  city     String
+  state    String
+  phone    String
+  lat      Float
+  lng      Float
+  aPlus    Int    @default(0)
+  aMinus   Int    @default(0)
+  bPlus    Int    @default(0)
+  bMinus   Int    @default(0)
+  oPlus    Int    @default(0)
+  oMinus   Int    @default(0)
+  abPlus   Int    @default(0)
+  abMinus  Int    @default(0)
+}
+
+model Pharmacy {
+  id      String @id @default(uuid())
+  name    String
+  address String
+  city    String
+  state   String
+  phone   String
+  lat     Float
+  lng     Float
+}
+
+model Medicine {
+  id           String  @id @default(uuid())
+  name         String
+  genericName  String
+  brandPrice   Float
+  genericPrice Float
+  savings      Float
+  description  String?
+  category     String?
+  availability String  @default("Available")
+}

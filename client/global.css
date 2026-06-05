@@ -1,0 +1,163 @@
+/** @import must precede all other statements */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /**
+   * Tailwind CSS theme - Healthcare Premium Colors
+   * Primary: #60A5FA (Sky Blue)
+   * Secondary: #93C5FD (Light Blue)
+   * Accent: #38BDF8 (Cyan)
+   * Background: #F8FCFF (Light Blue-White)
+  */
+  :root {
+    /* Light Mode */
+    --background: 208 100% 97.3%;
+    --foreground: 210 40% 10%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 210 40% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 210 40% 10%;
+
+    --primary: 204 90% 64%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 206 88% 73%;
+    --secondary-foreground: 210 40% 10%;
+
+    --muted: 208 14% 85%;
+    --muted-foreground: 210 20% 48%;
+
+    --accent: 188 94% 49%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 206 50% 85%;
+    --input: 206 50% 90%;
+    --ring: 204 90% 64%;
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 208 100% 97.3%;
+    --sidebar-foreground: 210 40% 10%;
+    --sidebar-primary: 204 90% 64%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 188 94% 49%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 206 50% 85%;
+    --sidebar-ring: 204 90% 64%;
+
+    /* Health specific */
+    --success: 134 61% 41%;
+    --emergency: 0 84% 60%;
+  }
+
+  .dark {
+    --background: 210 50% 5%;
+    --foreground: 208 100% 95%;
+
+    --card: 210 50% 10%;
+    --card-foreground: 208 100% 95%;
+
+    --popover: 210 50% 8%;
+    --popover-foreground: 208 100% 95%;
+
+    --primary: 204 80% 55%;
+    --primary-foreground: 210 50% 5%;
+
+    --secondary: 206 75% 60%;
+    --secondary-foreground: 210 50% 5%;
+
+    --muted: 210 30% 30%;
+    --muted-foreground: 208 30% 70%;
+
+    --accent: 188 94% 55%;
+    --accent-foreground: 210 50% 5%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 208 100% 95%;
+
+    --border: 210 35% 20%;
+    --input: 210 35% 25%;
+    --ring: 188 94% 55%;
+
+    --sidebar-background: 210 50% 8%;
+    --sidebar-foreground: 208 100% 95%;
+    --sidebar-primary: 204 80% 55%;
+    --sidebar-primary-foreground: 210 50% 5%;
+    --sidebar-accent: 188 94% 55%;
+    --sidebar-accent-foreground: 210 50% 5%;
+    --sidebar-border: 210 35% 20%;
+    --sidebar-ring: 188 94% 55%;
+
+    --success: 134 50% 50%;
+    --emergency: 0 84% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: "Inter", system-ui, -apple-system, sans-serif;
+  }
+
+  :where(p, span, li, h1, h2, h3, h4, h5, h6, a, button, label, td, th) {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  pre,
+  code {
+    overflow-x: auto;
+    white-space: pre;
+  }
+
+  h1 {
+    @apply font-bold tracking-tight;
+  }
+
+  h2 {
+    @apply font-bold tracking-tight;
+  }
+
+  h3 {
+    @apply font-semibold;
+  }
+}
+
+@layer components {
+  .glass {
+    @apply backdrop-blur-md bg-white/40 dark:bg-black/40 border border-white/20 dark:border-white/10;
+  }
+
+  .glass-dark {
+    @apply backdrop-blur-lg bg-black/50 border border-white/10;
+  }
+
+  .gradient-text {
+    @apply bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent;
+  }
+
+  .glow-primary {
+    @apply shadow-lg shadow-primary/30;
+  }
+
+  .glow-accent {
+    @apply shadow-lg shadow-accent/30;
+  }
+}
