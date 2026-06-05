@@ -16,7 +16,7 @@ function getHaversineDistance(lat1: number, lon1: number, lat2: number, lon2: nu
 }
 
 export const handleGetHospitals: RequestHandler = async (req, res) => {
-  const { query, type, lat, lng, userId } = req.query;
+  const { query, type, lat, lng } = req.query;
 
   try {
     // 1. Fetch hospitals from DB
@@ -63,79 +63,7 @@ export const handleGetHospitals: RequestHandler = async (req, res) => {
       results.sort((a, b) => a.distanceValue - b.distanceValue);
     }
 
-    // 5. Store search history in database if userId is provided
-    if (userId && typeof userId === "string" && !userId.startsWith("guest_") && query) {
-      await db.searchHistory.create({
-        data: {
-          userId,
-          type: "HOSPITAL",
-          query: String(query),
-          filters: JSON.stringify({ type }),
-        },
-      });
-    }
-
     res.json(results);
-  } catch (error: any) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-export const handleSaveHospital: RequestHandler = async (req, res) => {
-  const { userId, hospitalId, name, address, distance, contact, rating, services } = req.body;
-
-  if (!userId || !hospitalId) {
-    res.status(400).json({ error: "userId and hospitalId are required" });
-    return;
-  }
-
-  if (userId.startsWith("guest_")) {
-    res.status(400).json({ error: "Guests cannot bookmark resources" });
-    return;
-  }
-
-  try {
-    const existing = await db.savedHospital.findFirst({
-      where: { userId, hospitalId },
-    });
-
-    if (existing) {
-      res.status(400).json({ error: "Hospital already bookmarked" });
-      return;
-    }
-
-    const saved = await db.savedHospital.create({
-      data: {
-        userId,
-        hospitalId,
-        name,
-        address,
-        distance: distance || "Unknown distance",
-        contact: contact || "",
-        rating: rating ? parseFloat(rating) : 4.0,
-        services: services || "",
-      },
-    });
-
-    res.json({ message: "Hospital bookmarked successfully", saved });
-  } catch (error: any) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-export const handleUnsaveHospital: RequestHandler = async (req, res) => {
-  const { userId, hospitalId } = req.body;
-
-  if (!userId || !hospitalId) {
-    res.status(400).json({ error: "userId and hospitalId are required" });
-    return;
-  }
-
-  try {
-    await db.savedHospital.deleteMany({
-      where: { userId, hospitalId },
-    });
-    res.json({ message: "Bookmark removed successfully" });
   } catch (error: any) {
     res.status(500).json({ error: error.message });
   }

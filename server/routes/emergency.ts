@@ -16,7 +16,7 @@ function getDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
 }
 
 export const handleEmergencySos: RequestHandler = async (req, res) => {
-  const { userId, category, lat, lng } = req.body;
+  const { category, lat, lng } = req.body;
 
   if (!lat || !lng) {
     res.status(400).json({ error: "Latitude and Longitude are required for SOS" });
@@ -24,10 +24,9 @@ export const handleEmergencySos: RequestHandler = async (req, res) => {
   }
 
   try {
-    // 1. Create emergency request log
+    // 1. Create emergency request log anonymously
     const request = await db.emergencyRequest.create({
       data: {
-        userId: userId && !userId.startsWith("guest_") ? userId : null,
         category: category || "General Emergency",
         lat: parseFloat(lat),
         lng: parseFloat(lng),

@@ -3,8 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useAuth } from "@/contexts/AuthContext";
-import { AlertCircle, Phone, MapPin, X, Navigation as NavIcon, HeartPulse, ShieldAlert, Zap } from "lucide-react";
+import { AlertCircle, Phone, MapPin, HeartPulse, ShieldAlert, Zap } from "lucide-react";
 import { toast } from "sonner";
 
 interface SOSResponse {
@@ -24,7 +23,6 @@ interface SOSResponse {
 
 export default function Emergency() {
   const { t } = useLanguage();
-  const { user } = useAuth();
 
   const [selectedCategory, setSelectedCategory] = useState("General Emergency");
   const [sosActive, setSosActive] = useState(false);
@@ -97,7 +95,6 @@ export default function Emergency() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          userId: user?.id,
           category: selectedCategory,
           lat,
           lng,

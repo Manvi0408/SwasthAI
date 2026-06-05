@@ -3,8 +3,7 @@ import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { Search, MapPin, Phone, Droplet, CheckCircle } from "lucide-react";
-import { useAuth } from "@/contexts/AuthContext";
+import { MapPin, Phone, Droplet } from "lucide-react";
 
 interface BloodBankItem {
   id: string;
@@ -27,7 +26,6 @@ interface BloodBankItem {
 
 export default function BloodBanks() {
   const { t } = useLanguage();
-  const { user } = useAuth();
   
   const [bloodGroup, setBloodGroup] = useState("All");
   const [city, setCity] = useState("All");
@@ -47,7 +45,6 @@ export default function BloodBanks() {
       if (city !== "All") params.append("city", city);
       if (state !== "All") params.append("state", state);
       if (bloodGroup !== "All") params.append("bloodGroup", bloodGroup);
-      if (user?.id) params.append("userId", user.id);
 
       const res = await fetch(`/api/blood-banks?${params.toString()}`);
       if (res.ok) {
@@ -63,7 +60,7 @@ export default function BloodBanks() {
 
   useEffect(() => {
     fetchBloodBanks();
-  }, [bloodGroup, city, state, user]);
+  }, [bloodGroup, city, state]);
 
   return (
     <div className="w-full min-h-screen bg-background text-foreground flex flex-col">

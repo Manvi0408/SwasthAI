@@ -7,88 +7,8 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model User {
-  id                String             @id @default(uuid())
-  email             String?            @unique
-  phone             String?            @unique
-  password          String?            // Hashed password for email auth
-  role              String             @default("USER") // USER, ADMIN
-  language          String             @default("en")
-  theme             String             @default("light")
-  onboarded         Boolean            @default(false)
-  createdAt         DateTime           @default(now())
-  updatedAt         DateTime           @updatedAt
-  
-  profile           Profile?
-  medicalInfo       MedicalInfo?
-  emergencyContact  EmergencyContact?
-  locationInfo      LocationInfo?
-  searchHistory     SearchHistory[]
-  triageHistory     AiTriageHistory[]
-  emergencyRequests EmergencyRequest[]
-  savedHospitals    SavedHospital[]
-  savedMedicines    SavedMedicine[]
-}
-
-model Profile {
-  id         String   @id @default(uuid())
-  userId     String   @unique
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  fullName   String
-  profilePic String?
-  dob        String?
-  age        Int?
-  gender     String?
-}
-
-model MedicalInfo {
-  id         String   @id @default(uuid())
-  userId     String   @unique
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  bloodGroup String
-  height     Float?
-  weight     Float?
-  diseases   String?  // Comma separated list of existing diseases
-  allergies  String?  // Comma separated list of allergies
-  medications String? // Comma separated list of current medications
-  disability String?  // Disability information
-}
-
-model EmergencyContact {
-  id           String   @id @default(uuid())
-  userId       String   @unique
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  name         String
-  phone        String
-  relationship String
-}
-
-model LocationInfo {
-  id       String @id @default(uuid())
-  userId   String @unique
-  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  country  String @default("India")
-  state    String
-  city     String
-  pincode  String
-  lat      Float?
-  lng      Float?
-}
-
-model SearchHistory {
-  id        String   @id @default(uuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  type      String   // HOSPITAL, BLOOD_BANK, PHARMACY
-  query     String
-  filters   String?  // JSON string of active filters
-  timestamp DateTime @default(now())
-}
-
 model AiTriageHistory {
   id           String   @id @default(uuid())
-  userId       String
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   symptoms     String
   conditions   String   // JSON string of possible conditions
   severity     String   // High, Medium, Low
@@ -99,8 +19,6 @@ model AiTriageHistory {
 
 model EmergencyRequest {
   id        String   @id @default(uuid())
-  userId    String?
-  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
   category  String   // Cardiac, Accident, Stroke, etc.
   status    String   @default("PENDING") // PENDING, RESPONDING, RESOLVED
   lat       Float
@@ -109,32 +27,6 @@ model EmergencyRequest {
   timestamp DateTime @default(now())
 }
 
-model SavedHospital {
-  id         String   @id @default(uuid())
-  userId     String
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  hospitalId String
-  name       String
-  address    String
-  distance   String
-  contact    String
-  rating     Float
-  services   String   // Comma separated list of services
-  timestamp  DateTime @default(now())
-}
-
-model SavedMedicine {
-  id            String   @id @default(uuid())
-  userId        String
-  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  medicineId    String
-  name          String
-  brandPrice    Float
-  genericPrice  Float
-  savings       Float
-  availability  String
-  timestamp     DateTime @default(now())
-}
 
 // Master resource datasets
 model Hospital {

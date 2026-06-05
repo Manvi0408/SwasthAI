@@ -1,12 +1,10 @@
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Sun, Moon, LogIn, LogOut, LayoutDashboard, User } from "lucide-react";
+import { motion } from "framer-motion";
+import { Menu, X, Sun, Moon } from "lucide-react";
 import { useTheme } from "next-themes";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useAuth } from "@/contexts/AuthContext";
 import { Language } from "@/lib/i18n";
-import LoginModal from "./LoginModal";
 
 const languageList: { code: Language; name: string }[] = [
   { code: "en", name: "English" },
@@ -24,12 +22,9 @@ const languageList: { code: Language; name: string }[] = [
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [loginOpen, setLoginOpen] = useState(false);
   
   const { theme, setTheme } = useTheme();
   const { language, setLanguage, t } = useLanguage();
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -49,11 +44,6 @@ export default function Navigation() {
     { label: t("nav.triage"), href: "/triage" },
     { label: t("nav.about"), href: "/about" },
   ];
-
-  const handleLogout = () => {
-    logout();
-    navigate("/");
-  };
 
   return (
     <>
@@ -131,42 +121,6 @@ export default function Navigation() {
                 )}
               </motion.button>
 
-              {/* Auth actions */}
-              {user ? (
-                <div className="hidden md:flex items-center space-x-2">
-                  <Link
-                    to="/dashboard"
-                    className="px-4 py-2 rounded-lg bg-primary/10 text-primary font-bold text-xs flex items-center gap-1.5 hover:bg-primary/20 transition-all"
-                  >
-                    <LayoutDashboard className="w-3.5 h-3.5" />
-                    Dashboard
-                  </Link>
-                  <Link
-                    to="/profile"
-                    className="px-4 py-2 rounded-lg border border-border text-foreground font-bold text-xs flex items-center gap-1.5 hover:bg-black/5 dark:hover:bg-white/5 transition-all"
-                  >
-                    <User className="w-3.5 h-3.5" />
-                    Profile
-                  </Link>
-                  <button
-                    onClick={handleLogout}
-                    className="p-2 rounded-lg border border-red-500/20 hover:bg-red-500/10 text-red-500 transition-colors"
-                  >
-                    <LogOut className="w-4.5 h-4.5" />
-                  </button>
-                </div>
-              ) : (
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => setLoginOpen(true)}
-                  className="hidden sm:flex items-center gap-1.5 px-6 py-2 rounded-lg bg-gradient-to-r from-primary to-accent text-white font-semibold hover:shadow-lg hover:shadow-primary/50 transition-all text-sm cursor-pointer"
-                >
-                  <LogIn className="w-4.5 h-4.5" />
-                  {t("nav.login")}
-                </motion.button>
-              )}
-
               {/* Mobile Menu Button */}
               <motion.button
                 whileHover={{ scale: 1.1 }}
@@ -182,97 +136,29 @@ export default function Navigation() {
               </motion.button>
             </div>
           </div>
-
-          {/* Mobile Menu */}
-          <motion.div
-            initial={false}
-            animate={isOpen ? { height: "auto", opacity: 1 } : { height: 0, opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="xl:hidden overflow-hidden"
-          >
-            <div className="pt-4 pb-3 space-y-2 border-t border-border mt-4 text-sm font-semibold">
-              {navItems.map((item) => (
-                <Link
-                  key={item.href}
-                  to={item.href}
-                  className="block px-4 py-2 text-foreground hover:text-primary hover:bg-primary/5 rounded-lg transition-colors"
-                  onClick={() => setIsOpen(false)}
-                >
-                  {item.label}
-                </Link>
-              ))}
-
-              {user ? (
-                <div className="pt-4 border-t border-border/50 flex flex-col gap-2">
-                  <Link
-                    to="/dashboard"
-                    className="flex items-center gap-2 px-4 py-2 bg-primary/10 text-primary rounded-lg text-sm"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    <LayoutDashboard className="w-4 h-4" />
-                    Dashboard
-                  </Link>
-                  <Link
-                    to="/profile"
-                    className="flex items-center gap-2 px-4 py-2 border border-border rounded-lg text-sm"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    <User className="w-4 h-4" />
-                    Profile
-                  </Link>
-                  <button
-                    onClick={() => {
-                      setIsOpen(false);
-                      handleLogout();
-                    }}
-                    className="w-full text-left px-4 py-2 text-red-500 font-semibold"
-                  >
-                    Logout
-                  </button>
-                </div>
-              ) : (
-                <button
-                  onClick={() => {
-                    setIsOpen(false);
-                    setLoginOpen(true);
-                  }}
-                  className="w-full mt-4 px-4 py-2 rounded-lg bg-gradient-to-r from-primary to-accent text-white font-semibold flex items-center justify-center gap-2"
-                >
-                  <LogIn className="w-4 h-4" />
-                  {t("nav.login")}
-                </button>
-              )}
-            </div>
-          </motion.div>
         </div>
-      </motion.nav>
 
-      {/* Login Dialog Box */}
-      <AnimatePresence>
-        {loginOpen && (
-          <LoginModal
-            isOpen={loginOpen}
-            onClose={() => setLoginOpen(false)}
-            onOnboardingRequired={() => {
-              // Redirect to onboarding if authenticated user is new
-              setTimeout(() => {
-                const storedToken = localStorage.getItem("auth_token");
-                if (storedToken) {
-                  fetch(`/api/auth/me`, {
-                    headers: { Authorization: `Bearer ${storedToken}` }
-                  })
-                    .then((res) => res.json())
-                    .then((data) => {
-                      if (data.user && !data.user.onboarded && data.user.role !== "GUEST") {
-                        navigate("/onboarding");
-                      }
-                    });
-                }
-              }, 400);
-            }}
-          />
-        )}
-      </AnimatePresence>
+        {/* Mobile Menu */}
+        <motion.div
+          initial={false}
+          animate={isOpen ? { height: "auto", opacity: 1 } : { height: 0, opacity: 0 }}
+          transition={{ duration: 0.3 }}
+          className="xl:hidden overflow-hidden"
+        >
+          <div className="pt-4 pb-3 space-y-2 border-t border-border mt-4 text-sm font-semibold px-4">
+            {navItems.map((item) => (
+              <Link
+                key={item.href}
+                to={item.href}
+                className="block px-4 py-2 text-foreground hover:text-primary hover:bg-primary/5 rounded-lg transition-colors"
+                onClick={() => setIsOpen(false)}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </div>
+        </motion.div>
+      </motion.nav>
     </>
   );
 }

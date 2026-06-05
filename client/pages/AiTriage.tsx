@@ -3,8 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useAuth } from "@/contexts/AuthContext";
-import { Send, AlertTriangle, Activity, Stethoscope, ChevronRight, Info } from "lucide-react";
+import { Send, AlertTriangle, Activity, Stethoscope, Info } from "lucide-react";
 import { toast } from "sonner";
 
 interface Condition {
@@ -22,7 +21,6 @@ interface TriageResult {
 
 export default function AiTriage() {
   const { t } = useLanguage();
-  const { user } = useAuth();
 
   const [symptoms, setSymptoms] = useState("");
   const [loading, setLoading] = useState(false);
@@ -41,10 +39,7 @@ export default function AiTriage() {
       const res = await fetch("/api/triage", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          symptoms,
-          userId: user?.id,
-        }),
+        body: JSON.stringify({ symptoms }),
       });
 
       if (res.ok) {

@@ -3,9 +3,7 @@ import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useAuth } from "@/contexts/AuthContext";
-import { Search, Percent, Bookmark, BookmarkCheck, Phone, MapPin, Sparkles, Plus, Minus } from "lucide-react";
-import { toast } from "sonner";
+import { Search, Percent, Phone, MapPin, Sparkles, Plus, Minus } from "lucide-react";
 
 interface Medicine {
   id: string;
@@ -32,7 +30,6 @@ interface PharmacyStore {
 
 export default function Pharmacy() {
   const { t } = useLanguage();
-  const { user, saveMedicine, unsaveMedicine } = useAuth();
 
   const [searchQuery, setSearchQuery] = useState("");
   const [medicines, setMedicines] = useState<Medicine[]>([]);
@@ -48,7 +45,6 @@ export default function Pharmacy() {
     try {
       const params = new URLSearchParams();
       if (searchQuery) params.append("query", searchQuery);
-      if (user?.id) params.append("userId", user.id);
 
       const res = await fetch(`/api/pharmacy/medicines?${params.toString()}`);
       if (res.ok) {
@@ -80,33 +76,7 @@ export default function Pharmacy() {
   useEffect(() => {
     fetchMedicines();
     fetchPharmacies();
-  }, [searchQuery, user]);
-
-  const isSaved = (medId: string) => {
-    return user?.savedMedicines?.some((m) => m.medicineId === medId);
-  };
-
-  const handleToggleSave = async (med: Medicine) => {
-    if (!user || user.role === "GUEST") {
-      toast.error("Please login to save medicines");
-      return;
-    }
-
-    if (isSaved(med.id)) {
-      const res = await unsaveMedicine(med.id);
-      if (res.success) toast.success("Removed from saved medicines");
-    } else {
-      const res = await saveMedicine({
-        medicineId: med.id,
-        name: med.name,
-        brandPrice: med.brandPrice,
-        genericPrice: med.genericPrice,
-        savings: med.savings,
-        availability: med.availability,
-      });
-      if (res.success) toast.success("Added to saved medicines");
-    }
-  };
+  }, [searchQuery]);
 
   const calculateSavingsPercent = (brand: number, gen: number) => {
     return Math.round(((brand - gen) / brand) * 100);
@@ -191,23 +161,6 @@ export default function Pharmacy() {
                             {calculateSavingsPercent(med.brandPrice, med.genericPrice)}% Save
                           </div>
                         </div>
-
-                        <div className="flex flex-col gap-2">
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleToggleSave(med);
-                            }}
-                            className="p-2.5 rounded-lg border border-border/40 hover:bg-primary/5 transition-all text-primary"
-                          >
-                            {isSaved(med.id) ? (
-                              <BookmarkCheck className="w-5 h-5 fill-primary text-primary" />
-                            ) : (
-                              <Bookmark className="w-5 h-5 text-primary" />
-                            )}
-                          </button>
-                        </div>
                       </div>
                     </motion.div>
                   ))}
@@ -277,29 +230,6 @@ export default function Pharmacy() {
                   <p className="text-sm text-foreground/50 text-center py-10">Select a medicine to calculate savings.</p>
                 )}
               </div>
-
-              {/* Saved Medicines Dashboard List */}
-              {user && !user.role.startsWith("GUEST") && user.savedMedicines && user.savedMedicines.length > 0 && (
-                <div className="glass rounded-2xl p-6 border border-white/20">
-                  <h3 className="text-base font-bold mb-4">Saved Medicines</h3>
-                  <div className="space-y-3">
-                    {user.savedMedicines.map((m) => (
-                      <div key={m.id} className="flex justify-between items-center py-2 border-b border-border/30 last:border-b-0">
-                        <div>
-                          <div className="text-sm font-bold">{m.name}</div>
-                          <div className="text-xs text-green-500">Saved ₹{m.savings.toFixed(2)} / pack</div>
-                        </div>
-                        <button
-                          onClick={() => handleToggleSave({ id: m.medicineId } as any)}
-                          className="text-xs text-red-500 font-semibold hover:underline"
-                        >
-                          Remove
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
             </div>
           </div>
 

@@ -2,7 +2,7 @@ import { RequestHandler } from "express";
 import { db } from "../db.js";
 
 export const handleTriage: RequestHandler = async (req, res) => {
-  const { symptoms, userId } = req.body;
+  const { symptoms } = req.body;
 
   if (!symptoms) {
     res.status(400).json({ error: "Symptoms description is required" });
@@ -113,19 +113,16 @@ export const handleTriage: RequestHandler = async (req, res) => {
   }
 
   try {
-    // Log in database if userId is provided
-    if (userId && typeof userId === "string" && !userId.startsWith("guest_")) {
-      await db.aiTriageHistory.create({
-        data: {
-          userId,
-          symptoms,
-          conditions: JSON.stringify(possibleConditions),
-          severity,
-          action,
-          hospitalType,
-        },
-      });
-    }
+    // Log anonymously
+    await db.aiTriageHistory.create({
+      data: {
+        symptoms,
+        conditions: JSON.stringify(possibleConditions),
+        severity,
+        action,
+        hospitalType,
+      },
+    });
 
     res.json({
       possibleConditions,

@@ -2,7 +2,7 @@ import { RequestHandler } from "express";
 import { db } from "../db.js";
 
 export const handleGetBloodBanks: RequestHandler = async (req, res) => {
-  const { city, state, bloodGroup, userId } = req.query;
+  const { city, state, bloodGroup } = req.query;
 
   try {
     let bloodBanks = await db.bloodBank.findMany();
@@ -34,18 +34,6 @@ export const handleGetBloodBanks: RequestHandler = async (req, res) => {
           case "AB-": return b.abMinus > 0;
           default: return true;
         }
-      });
-    }
-
-    // 4. Log search history if userId is provided
-    if (userId && typeof userId === "string" && !userId.startsWith("guest_")) {
-      await db.searchHistory.create({
-        data: {
-          userId,
-          type: "BLOOD_BANK",
-          query: `City: ${city || "All"}, State: ${state || "All"}`,
-          filters: JSON.stringify({ bloodGroup }),
-        },
       });
     }
 

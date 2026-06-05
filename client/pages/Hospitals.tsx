@@ -3,8 +3,7 @@ import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { Search, MapPin, Phone, Star, Crosshair, BookmarkCheck, Bookmark } from "lucide-react";
-import { useAuth } from "@/contexts/AuthContext";
+import { Search, MapPin, Phone, Star, Crosshair } from "lucide-react";
 import { toast } from "sonner";
 
 interface HospitalItem {
@@ -23,7 +22,6 @@ interface HospitalItem {
 
 export default function Hospitals() {
   const { t } = useLanguage();
-  const { user, saveHospital, unsaveHospital } = useAuth();
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedType, setSelectedType] = useState("All");
@@ -31,8 +29,8 @@ export default function Hospitals() {
   const [loading, setLoading] = useState(false);
   
   // Location states
-  const [userLat, setUserLat] = useState<number | null>(user?.locationInfo?.lat || null);
-  const [userLng, setUserLng] = useState<number | null>(user?.locationInfo?.lng || null);
+  const [userLat, setUserLat] = useState<number | null>(null);
+  const [userLng, setUserLng] = useState<number | null>(null);
   const [fetchingLoc, setFetchingLoc] = useState(false);
 
   const categories = ["All", "AIIMS", "Government", "Private", "Trauma Center", "Cardiac Center", "Emergency Center"];
@@ -65,7 +63,6 @@ export default function Hospitals() {
       if (selectedType !== "All") params.append("type", selectedType);
       if (userLat) params.append("lat", String(userLat));
       if (userLng) params.append("lng", String(userLng));
-      if (user?.id) params.append("userId", user.id);
 
       const res = await fetch(`/api/hospitals?${params.toString()}`);
       if (res.ok) {
@@ -81,34 +78,7 @@ export default function Hospitals() {
 
   useEffect(() => {
     fetchHospitals();
-  }, [searchTerm, selectedType, userLat, userLng, user]);
-
-  const isHospitalSaved = (hospId: string) => {
-    return user?.savedHospitals?.some((h) => h.hospitalId === hospId);
-  };
-
-  const handleToggleSave = async (hosp: HospitalItem) => {
-    if (!user || user.role === "GUEST") {
-      toast.error("Please login to save hospitals");
-      return;
-    }
-
-    if (isHospitalSaved(hosp.id)) {
-      const res = await unsaveHospital(hosp.id);
-      if (res.success) toast.success("Hospital removed from bookmarks");
-    } else {
-      const res = await saveHospital({
-        hospitalId: hosp.id,
-        name: hosp.name,
-        address: hosp.address,
-        distance: hosp.distance,
-        contact: hosp.phone,
-        rating: hosp.rating,
-        services: hosp.services,
-      });
-      if (res.success) toast.success("Hospital bookmarked successfully");
-    }
-  };
+  }, [searchTerm, selectedType, userLat, userLng]);
 
   return (
     <div className="w-full min-h-screen bg-background text-foreground flex flex-col">
@@ -251,21 +221,10 @@ export default function Hospitals() {
                             href={`https://www.google.com/maps/dir/?api=1&destination=${bank.lat},${bank.lng}`}
                             target="_blank"
                             rel="noreferrer"
-                            className="flex-1 sm:flex-initial px-4 py-2 bg-gradient-to-r from-primary to-accent text-white font-bold rounded-lg hover:shadow-lg transition-all text-xs text-center"
+                            className="flex-grow sm:flex-initial px-6 py-2 bg-gradient-to-r from-primary to-accent text-white font-bold rounded-lg hover:shadow-lg transition-all text-xs text-center"
                           >
                             {t("hospitals.directions")}
                           </a>
-                          <button
-                            type="button"
-                            onClick={() => handleToggleSave(bank)}
-                            className="px-3 py-2 border border-border/40 hover:bg-primary/5 text-primary rounded-lg transition-all"
-                          >
-                            {isHospitalSaved(bank.id) ? (
-                              <BookmarkCheck className="w-4 h-4 fill-primary" />
-                            ) : (
-                              <Bookmark className="w-4 h-4" />
-                            )}
-                          </button>
                         </div>
                       </div>
                     </motion.div>
