@@ -30,16 +30,21 @@ model EmergencyRequest {
 
 // Master resource datasets
 model Hospital {
-  id       String @id @default(uuid())
-  name     String
-  address  String
-  type     String // AIIMS, Government, Private, Trauma Center, Cardiac Center, Emergency Center
-  services String // Comma separated list
-  beds     String
-  rating   Float
-  phone    String
-  lat      Float
-  lng      Float
+  id             String   @id @default(uuid())
+  name           String
+  address        String
+  type           String // AIIMS, Government, Private, Trauma Center, Cardiac Center, Emergency Center
+  services       String // Comma separated list
+  beds           String
+  rating         Float
+  phone          String
+  lat            Float
+  lng            Float
+  city           String   @default("New Delhi")
+  state          String   @default("Delhi")
+  icuBeds        Int      @default(0)
+  ventilatorBeds Int      @default(0)
+  emergencyBeds  Int      @default(0)
 }
 
 model BloodBank {
@@ -83,3 +88,58 @@ model Medicine {
   category     String?
   availability String  @default("Available")
 }
+
+model HealthRiskAssessment {
+  id                   String   @id @default(uuid())
+  age                  Int
+  height               Float
+  weight               Float
+  bmi                  Float
+  bloodPressure        String
+  diabetes             Boolean
+  smoking              Boolean
+  alcohol              Boolean
+  familyHistory        String
+  activityLevel        String
+  heartDiseaseRisk     Float
+  strokeRisk           Float
+  diabetesRisk         Float
+  riskScore            Float
+  riskCategory         String
+  recommendations      String
+  lifestyleSuggestions String
+  timestamp            DateTime @default(now())
+}
+
+model MedicalReport {
+  id            String          @id @default(uuid())
+  fileName      String
+  fileType      String
+  fileSize      Int
+  extractedText String?
+  timestamp     DateTime        @default(now())
+  analysis      ReportAnalysis?
+}
+
+model ReportAnalysis {
+  id                    String        @id @default(uuid())
+  reportId              String        @unique
+  report                MedicalReport @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  simpleExplanation     String
+  abnormalities         String
+  nextSteps             String
+  recommendedSpecialist String
+  timestamp             DateTime      @default(now())
+}
+
+model InjuryAnalysis {
+  id              String   @id @default(uuid())
+  imageUrl        String?
+  injuryType      String
+  severity        String
+  confidence      Float
+  recommendations String
+  emergencyLevel  String
+  timestamp       DateTime @default(now())
+}
+

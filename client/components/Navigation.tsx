@@ -37,11 +37,14 @@ export default function Navigation() {
 
   const navItems = [
     { label: t("nav.home"), href: "/" },
+    { label: "Interactive Map", href: "/map" },
     { label: t("nav.hospitals"), href: "/hospitals" },
     { label: t("nav.blood_banks"), href: "/blood-banks" },
     { label: t("nav.pharmacy"), href: "/pharmacy" },
     { label: t("nav.emergency"), href: "/emergency" },
-    { label: t("nav.triage"), href: "/triage" },
+    { label: "AI Clinical Triage", href: "/triage" },
+    { label: "Health Risk Index", href: "/health-risk" },
+    { label: "Injury Detector", href: "/injury-detection" },
     { label: t("nav.about"), href: "/about" },
   ];
 

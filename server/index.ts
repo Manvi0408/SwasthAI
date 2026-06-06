@@ -16,14 +16,18 @@ import { handleGetMedicines, handleGetPharmacies } from "./routes/pharmacy.js";
 import { handleTriage } from "./routes/triage.js";
 import { handleEmergencySos } from "./routes/emergency.js";
 import { handleSearch } from "./routes/search.js";
+import { handleCreateAssessment, handleGetAssessmentHistory } from "./routes/health-risk.js";
+import { handleAnalyzeReport, handleGetReportHistory } from "./routes/medical-report.js";
+import { handleDetectInjury, handleGetInjuryHistory } from "./routes/injury.js";
+import { handleGetAnalytics } from "./routes/analytics.js";
 
 export function createServer() {
   const app = express();
 
   // Middleware
   app.use(cors());
-  app.use(express.json());
-  app.use(express.urlencoded({ extended: true }));
+  app.use(express.json({ limit: "50mb" })); // support large image/pdf base64 uploads
+  app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
   // Public API ping route
   app.get("/api/ping", (_req, res) => {
@@ -49,6 +53,22 @@ export function createServer() {
 
   // Emergency SOS routes
   app.post("/api/emergency/sos", handleEmergencySos);
+
+  // Health Risk Assessment routes
+  app.post("/api/health-risk", handleCreateAssessment);
+  app.get("/api/health-risk/history", handleGetAssessmentHistory);
+
+  // AI Medical Report routes
+  app.post("/api/medical-report", handleAnalyzeReport);
+  app.get("/api/medical-report/history", handleGetReportHistory);
+
+  // AI Injury Detection routes
+  app.post("/api/injury/detect", handleDetectInjury);
+  app.get("/api/injury/history", handleGetInjuryHistory);
+
+  // Healthcare Analytics routes
+  app.get("/api/healthcare-analytics", handleGetAnalytics);
+
 
   // Global JSON Error Handler (Must be registered last)
   app.use((err: any, _req: express.Request, res: express.Response, _next: express.NextFunction) => {

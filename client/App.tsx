@@ -17,6 +17,9 @@ import Pharmacy from "./pages/Pharmacy";
 import Emergency from "./pages/Emergency";
 import AiTriage from "./pages/AiTriage";
 import About from "./pages/About";
+import HealthRisk from "./pages/HealthRisk";
+import InjuryDetection from "./pages/InjuryDetection";
+import MapPage from "./pages/MapPage";
 
 const queryClient = new QueryClient();
 
@@ -36,6 +39,9 @@ const App = () => (
               <Route path="/emergency" element={<Emergency />} />
               <Route path="/triage" element={<AiTriage />} />
               <Route path="/about" element={<About />} />
+              <Route path="/health-risk" element={<HealthRisk />} />
+              <Route path="/injury-detection" element={<InjuryDetection />} />
+              <Route path="/map" element={<MapPage />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

@@ -11,6 +11,80 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
+const CITY_COORDS: { [city: string]: { state: string; lat: number; lng: number } } = {
+  "New Delhi": { state: "Delhi", lat: 28.6139, lng: 77.2090 },
+  "Mumbai": { state: "Maharashtra", lat: 19.0760, lng: 72.8777 },
+  "Kolkata": { state: "West Bengal", lat: 22.5726, lng: 88.3639 },
+  "Chennai": { state: "Tamil Nadu", lat: 13.0827, lng: 80.2707 },
+  "Bangalore": { state: "Karnataka", lat: 12.9716, lng: 77.5946 },
+  "Hyderabad": { state: "Telangana", lat: 17.3850, lng: 78.4867 },
+  "Ahmedabad": { state: "Gujarat", lat: 23.0225, lng: 72.5714 },
+  "Pune": { state: "Maharashtra", lat: 18.5204, lng: 73.8567 },
+  "Jaipur": { state: "Rajasthan", lat: 26.9124, lng: 75.7873 },
+  "Lucknow": { state: "Uttar Pradesh", lat: 26.8467, lng: 80.9462 },
+  "Guwahati": { state: "Assam", lat: 26.1445, lng: 91.7362 },
+  "Patna": { state: "Bihar", lat: 25.5941, lng: 85.1376 },
+  "Bhopal": { state: "Madhya Pradesh", lat: 23.2599, lng: 77.4126 },
+  "Kochi": { state: "Kerala", lat: 9.9312, lng: 76.2673 },
+  "Bhubaneswar": { state: "Odisha", lat: 20.2961, lng: 85.8245 },
+  "Chandigarh": { state: "Punjab", lat: 30.7333, lng: 76.7794 },
+  "Dehradun": { state: "Uttarakhand", lat: 30.3165, lng: 78.0322 },
+  "Srinagar": { state: "Jammu and Kashmir", lat: 34.0837, lng: 74.7973 },
+  "Ranchi": { state: "Jharkhand", lat: 23.3441, lng: 85.3090 },
+  "Raipur": { state: "Chhattisgarh", lat: 21.2514, lng: 81.6296 },
+  "Panaji": { state: "Goa", lat: 15.4909, lng: 73.8278 },
+  "Gurugram": { state: "Haryana", lat: 28.4595, lng: 77.0266 },
+  "Noida": { state: "Uttar Pradesh", lat: 28.5355, lng: 77.3910 },
+  "Kanpur": { state: "Uttar Pradesh", lat: 26.4499, lng: 80.3319 },
+  "Nagpur": { state: "Maharashtra", lat: 21.1458, lng: 79.0882 },
+  "Indore": { state: "Madhya Pradesh", lat: 22.7196, lng: 75.8577 },
+  "Vadodara": { state: "Gujarat", lat: 22.3072, lng: 73.1812 },
+  "Surat": { state: "Gujarat", lat: 21.1702, lng: 72.8311 },
+  "Coimbatore": { state: "Tamil Nadu", lat: 11.0168, lng: 76.9558 },
+  "Madurai": { state: "Tamil Nadu", lat: 9.9252, lng: 78.1198 },
+  "Visakhapatnam": { state: "Andhra Pradesh", lat: 17.6868, lng: 83.2185 },
+  "Vijayawada": { state: "Andhra Pradesh", lat: 16.5062, lng: 80.6480 },
+  "Amritsar": { state: "Punjab", lat: 31.6340, lng: 74.8723 },
+  "Ludhiana": { state: "Punjab", lat: 30.9010, lng: 75.8573 },
+  "Agra": { state: "Uttar Pradesh", lat: 27.1767, lng: 78.0081 },
+  "Varanasi": { state: "Uttar Pradesh", lat: 25.3176, lng: 82.9739 },
+  "Ghaziabad": { state: "Uttar Pradesh", lat: 28.6692, lng: 77.4538 },
+  "Nashik": { state: "Maharashtra", lat: 19.9975, lng: 73.7898 },
+  "Jodhpur": { state: "Rajasthan", lat: 26.2389, lng: 73.0243 },
+  "Kota": { state: "Rajasthan", lat: 25.2138, lng: 75.8648 },
+  "Trivandrum": { state: "Kerala", lat: 8.5241, lng: 76.9366 },
+  "Shimla": { state: "Himachal Pradesh", lat: 31.1048, lng: 77.1734 },
+  "Itanagar": { state: "Arunachal Pradesh", lat: 27.0844, lng: 93.6053 },
+  "Imphal": { state: "Manipur", lat: 24.8170, lng: 93.9368 },
+  "Shillong": { state: "Meghalaya", lat: 25.5788, lng: 91.8831 },
+  "Aizawl": { state: "Mizoram", lat: 23.7271, lng: 92.7176 },
+  "Kohima": { state: "Nagaland", lat: 25.6751, lng: 94.1086 },
+  "Gangtok": { state: "Sikkim", lat: 27.3314, lng: 88.6138 },
+  "Agartala": { state: "Tripura", lat: 23.8315, lng: 91.2868 }
+};
+
+const hospitalNames = [
+  "Apollo Hospital", "Fortis Super Speciality", "Max Healthcare", "AIIMS", "Lifeline General Hospital",
+  "Metro Emergency Hospital", "Red Cross Hospital", "Care Cardiac Center", "Medanta Health Center",
+  "Holy Family Hospital", "Narayana Health", "Manipal Hospital", "KIMS Hospital", "Wockhardt Hospital",
+  "Lilavati Hospital", "Columbia Asia", "Aster Medcity", "Yashoda Hospital", "Sahyadri Hospital", "Apex Trauma Center"
+];
+
+const bloodBankNames = [
+  "Red Cross Blood Center", "Rotary Blood Bank", "Lions Club Donor Clinic", "Government Civil Blood Bank",
+  "Jeevan Blood Bank", "Sanjeevani Donor Bank", "Samarpan Stock Center", "Metro Blood Bank",
+  "Apollo Donor Center", "Pratham Blood Registry"
+];
+
+const hospitalTypes = ["AIIMS", "Government", "Private", "Trauma Center", "Cardiac Center", "Emergency Center"];
+const servicesList = [
+  "Emergency, ICU, Trauma, Cardiology, Oncology, Pediatrics, Neurology, Burn Unit",
+  "Emergency, Trauma, Burn Unit, General Surgery, General Medicine, Pediatrics",
+  "Emergency, Cardiology, Neurosurgery, ICU, Multi-specialty, Trauma",
+  "Emergency, Ambulance, Trauma, ICU, General Medicine, First-Aid Response",
+  "Emergency, Cardiac Care, Trauma, ICU, Orthopedics, Pediatrics"
+];
+
 async function main() {
   console.log("🌱 Starting database seeding...");
 
@@ -19,253 +93,129 @@ async function main() {
   await prisma.bloodBank.deleteMany();
   await prisma.pharmacy.deleteMany();
   await prisma.medicine.deleteMany();
+  await prisma.healthRiskAssessment.deleteMany();
+  await prisma.reportAnalysis.deleteMany();
+  await prisma.medicalReport.deleteMany();
+  await prisma.injuryAnalysis.deleteMany();
 
-  // 2. Seed Hospitals
-  const hospitals = [
-    {
-      name: "AIIMS New Delhi",
-      address: "Ansari Nagar East, Near Safdarjung Tomb, New Delhi, Delhi 110029",
-      type: "AIIMS",
-      services: "Emergency, ICU, Trauma, Cardiology, Oncology, Pediatrics, Neurology, Burn Unit",
-      beds: "2200+ beds",
-      rating: 4.9,
-      phone: "+91-11-26588500",
-      lat: 28.5672,
-      lng: 77.2100,
-    },
-    {
-      name: "Safdarjung Hospital",
-      address: "Ansari Nagar West, Opp. AIIMS, New Delhi, Delhi 110029",
-      type: "Government",
-      services: "Emergency, Trauma, Burn Unit, General Surgery, General Medicine, Pediatrics",
-      beds: "2900+ beds",
-      rating: 4.2,
-      phone: "+91-11-26707100",
-      lat: 28.5685,
-      lng: 77.2078,
-    },
-    {
-      name: "Apollo Greams Road Chennai",
-      address: "21, Greams Lane, Off Greams Road, Chennai, Tamil Nadu 600006",
-      type: "Private",
-      services: "Emergency, Cardiology, Neurosurgery, ICU, Multi-specialty, Trauma",
-      beds: "600+ beds",
-      rating: 4.8,
-      phone: "+91-44-28290200",
-      lat: 13.0601,
-      lng: 80.2520,
-    },
-    {
-      name: "KEM Hospital Mumbai",
-      address: "Acharya Donde Marg, Parel, Mumbai, Maharashtra 400012",
-      type: "Government",
-      services: "Emergency, Trauma Center, ICU, Pediatrics, General Surgery, General Medicine",
-      beds: "1800+ beds",
-      rating: 4.3,
-      phone: "+91-22-24107000",
-      lat: 19.0025,
-      lng: 72.8420,
-    },
-    {
-      name: "Fortis Hiranandani Hospital Mumbai",
-      address: "Mini Sea Shore Road, Sector 10, Vashi, Navi Mumbai, Maharashtra 400703",
-      type: "Private",
-      services: "Emergency, Cardiac Care, Trauma, ICU, Orthopedics, Pediatrics",
-      beds: "150+ beds",
-      rating: 4.7,
-      phone: "+91-22-68846146",
-      lat: 19.0760,
-      lng: 72.9980,
-    },
-    {
-      name: "Max Super Speciality Hospital Saket",
-      address: "1-2, Press Enclave Road, Saket, New Delhi, Delhi 110017",
-      type: "Private",
-      services: "Emergency, Cardiology, Oncology, ICU, Trauma, Organ Transplant",
-      beds: "500+ beds",
-      rating: 4.6,
-      phone: "+91-11-26515050",
-      lat: 28.5276,
-      lng: 77.2144,
-    },
-    {
-      name: "Jai Prakash Narayan Apex Trauma Center (AIIMS)",
-      address: "Raj Nagar, Safdarjung Enclave, New Delhi, Delhi 110029",
-      type: "Trauma Center",
-      services: "Trauma, Emergency, Neurosurgery, Orthopedics, ICU, Blood Bank Access",
-      beds: "250+ beds",
-      rating: 4.8,
-      phone: "+91-11-26189000",
-      lat: 28.5644,
-      lng: 77.1990,
-    },
-    {
-      name: "Fortis Escorts Heart Institute",
-      address: "Okhla Road, Sukhdev Vihar, Metro Station, New Delhi, Delhi 110025",
-      type: "Cardiac Center",
-      services: "Emergency, Cardiology, Cardiac Surgery, Pediatric Heart Care, ICU",
-      beds: "310+ beds",
-      rating: 4.8,
-      phone: "+91-11-47135000",
-      lat: 28.5604,
-      lng: 77.2736,
-    },
-    {
-      name: "Metro Emergency Hospital Hyderabad",
-      address: "Road No 2, Banjara Hills, Hyderabad, Telangana 500034",
-      type: "Emergency Center",
-      services: "Emergency, Ambulance, Trauma, ICU, General Medicine, First-Aid Response",
-      beds: "200+ beds",
-      rating: 4.5,
-      phone: "+91-40-45678900",
-      lat: 17.4220,
-      lng: 78.4480,
-    },
-  ];
+  console.log("🧹 Cleared old database tables.");
 
-  for (const h of hospitals) {
-    await prisma.hospital.create({ data: h });
+  // 2. Seed Expanded Hospitals (100+ hospitals across 28 states and 40+ cities)
+  let hospitalCount = 0;
+  const cities = Object.keys(CITY_COORDS);
+
+  // We want to generate ~110 hospitals
+  // Let's generate 2 to 3 hospitals per city
+  for (const city of cities) {
+    const info = CITY_COORDS[city];
+    const state = info.state;
+    const baseLat = info.lat;
+    const baseLng = info.lng;
+
+    // Generate 2 or 3 hospitals for this city
+    const hospCountForCity = Math.random() > 0.4 ? 3 : 2;
+    for (let i = 0; i < hospCountForCity; i++) {
+      const idxName = (hospitalCount + i) % hospitalNames.length;
+      const hType = hospitalTypes[(hospitalCount + i) % hospitalTypes.length];
+      const services = servicesList[(hospitalCount + i) % servicesList.length];
+      const name = `${city} ${hospitalNames[idxName]}`;
+      const address = `Sector ${i + 4}, Near City Center, ${city}, ${state} - India`;
+      
+      // Jitter lat/lng so they aren't exactly stacked
+      const latJitter = baseLat + (Math.random() - 0.5) * 0.04;
+      const lngJitter = baseLng + (Math.random() - 0.5) * 0.04;
+
+      const totalBedsVal = Math.floor(Math.random() * 500) + 50;
+      const icuBedsVal = Math.floor(totalBedsVal * 0.15);
+      const ventBedsVal = Math.floor(icuBedsVal * 0.4);
+      const emergencyBedsVal = Math.floor(totalBedsVal * 0.1);
+
+      await prisma.hospital.create({
+        data: {
+          name,
+          address,
+          type: hType,
+          services,
+          beds: `${totalBedsVal}+ beds`,
+          rating: parseFloat((4.0 + Math.random() * 0.9).toFixed(1)),
+          phone: `+91-${9800000000 + hospitalCount}`,
+          lat: latJitter,
+          lng: lngJitter,
+          city,
+          state,
+          icuBeds: icuBedsVal,
+          ventilatorBeds: ventBedsVal,
+          emergencyBeds: emergencyBedsVal
+        }
+      });
+      hospitalCount++;
+    }
   }
-  console.log(`🏥 Seeded ${hospitals.length} hospitals.`);
+  console.log(`🏥 Programmatically seeded ${hospitalCount} hospitals.`);
 
-  // 3. Seed Blood Banks
-  const bloodBanks = [
-    {
-      name: "Indian Red Cross Society Blood Bank",
-      address: "1, Red Cross Road, Near Parliament House, Connaught Place, New Delhi, Delhi 110001",
-      city: "New Delhi",
-      state: "Delhi",
-      phone: "+91-11-23716441",
-      lat: 28.6200,
-      lng: 77.2100,
-      aPlus: 25,
-      aMinus: 6,
-      bPlus: 35,
-      bMinus: 8,
-      oPlus: 45,
-      oMinus: 12,
-      abPlus: 15,
-      abMinus: 4,
-    },
-    {
-      name: "Lions Club Blood Bank Mumbai",
-      address: "Lions Community Hall, Juhu Scheme, Vile Parle West, Mumbai, Maharashtra 400049",
-      city: "Mumbai",
-      state: "Maharashtra",
-      phone: "+91-22-26207890",
-      lat: 19.1026,
-      lng: 72.8368,
-      aPlus: 18,
-      aMinus: 2,
-      bPlus: 28,
-      bMinus: 5,
-      oPlus: 32,
-      oMinus: 7,
-      abPlus: 10,
-      abMinus: 2,
-    },
-    {
-      name: "Chennai Voluntary Blood Bank & Research Institute",
-      address: "15, Spurtank Road, Chetpet, Chennai, Tamil Nadu 600031",
-      city: "Chennai",
-      state: "Tamil Nadu",
-      phone: "+91-44-26412030",
-      lat: 13.0760,
-      lng: 80.2440,
-      aPlus: 12,
-      aMinus: 1,
-      bPlus: 20,
-      bMinus: 3,
-      oPlus: 24,
-      oMinus: 5,
-      abPlus: 8,
-      abMinus: 1,
-    },
-    {
-      name: "Rotary TTK Blood Bank Bangalore",
-      address: "20, Double Road, NH Compound, KH Road, Shanti Nagar, Bangalore, Karnataka 560027",
-      city: "Bangalore",
-      state: "Karnataka",
-      phone: "+91-80-25293555",
-      lat: 12.9560,
-      lng: 77.5975,
-      aPlus: 30,
-      aMinus: 8,
-      bPlus: 42,
-      bMinus: 10,
-      oPlus: 50,
-      oMinus: 15,
-      abPlus: 20,
-      abMinus: 5,
-    },
-    {
-      name: "Bengal Blood Bank & Research Society",
-      address: "3A, Shakespeare Sarani, Kolkata, West Bengal 700071",
-      city: "Kolkata",
-      state: "West Bengal",
-      phone: "+91-33-22823344",
-      lat: 22.5448,
-      lng: 88.3525,
-      aPlus: 14,
-      aMinus: 0,
-      bPlus: 22,
-      bMinus: 2,
-      oPlus: 25,
-      oMinus: 3,
-      abPlus: 6,
-      abMinus: 0,
-    },
-  ];
+  // 3. Seed Blood Banks (100+ blood banks across states/cities)
+  let bloodBankCount = 0;
+  for (const city of cities) {
+    const info = CITY_COORDS[city];
+    const state = info.state;
+    const baseLat = info.lat;
+    const baseLng = info.lng;
 
-  for (const bb of bloodBanks) {
-    await prisma.bloodBank.create({ data: bb });
+    const bbCountForCity = Math.random() > 0.4 ? 3 : 2;
+    for (let i = 0; i < bbCountForCity; i++) {
+      const idxName = (bloodBankCount + i) % bloodBankNames.length;
+      const name = `${city} ${bloodBankNames[idxName]}`;
+      const address = `Plot ${i + 20}, Institutional Area, ${city}, ${state} - India`;
+      
+      const latJitter = baseLat + (Math.random() - 0.5) * 0.04;
+      const lngJitter = baseLng + (Math.random() - 0.5) * 0.04;
+
+      await prisma.bloodBank.create({
+        data: {
+          name,
+          address,
+          city,
+          state,
+          phone: `+91-${8800000000 + bloodBankCount}`,
+          lat: latJitter,
+          lng: lngJitter,
+          aPlus: Math.floor(Math.random() * 50) + 5,
+          aMinus: Math.floor(Math.random() * 15),
+          bPlus: Math.floor(Math.random() * 50) + 5,
+          bMinus: Math.floor(Math.random() * 15),
+          oPlus: Math.floor(Math.random() * 60) + 5,
+          oMinus: Math.floor(Math.random() * 20) + 2,
+          abPlus: Math.floor(Math.random() * 20) + 1,
+          abMinus: Math.floor(Math.random() * 10),
+        }
+      });
+      bloodBankCount++;
+    }
   }
-  console.log(`🩸 Seeded ${bloodBanks.length} blood banks.`);
+  console.log(`🩸 Programmatically seeded ${bloodBankCount} blood banks.`);
 
-  // 4. Seed Pharmacies
-  const pharmacies = [
-    {
-      name: "Apollo Pharmacy Connaught Place",
-      address: "E-Block, Inner Circle, Connaught Place, New Delhi, Delhi 110001",
-      city: "New Delhi",
-      state: "Delhi",
-      phone: "+91-11-41510255",
-      lat: 28.6300,
-      lng: 77.2200,
-    },
-    {
-      name: "Pradhan Mantri Bhartiya Janaushadhi Kendra Noida",
-      address: "Shop 12, Sector 15 Metro Station Market, Noida, Uttar Pradesh 201301",
-      city: "Noida",
-      state: "Uttar Pradesh",
-      phone: "+91-9999-XXXXXX",
-      lat: 28.5830,
-      lng: 77.3150,
-    },
-    {
-      name: "Wellness Forever Bandra",
-      address: "Turner Road, Patkar Hall, Bandra West, Mumbai, Maharashtra 400050",
-      city: "Mumbai",
-      state: "Maharashtra",
-      phone: "+91-22-66009999",
-      lat: 19.0580,
-      lng: 72.8300,
-    },
-    {
-      name: "MedPlus T. Nagar Chennai",
-      address: "G.N. Chetty Road, T. Nagar, Chennai, Tamil Nadu 600017",
-      city: "Chennai",
-      state: "Tamil Nadu",
-      phone: "+91-44-42120000",
-      lat: 13.0410,
-      lng: 80.2330,
-    },
-  ];
+  // 4. Seed Pharmacies (40+ pharmacies, one for each city)
+  let pharmacyCount = 0;
+  for (const city of cities) {
+    const info = CITY_COORDS[city];
+    const state = info.state;
+    const baseLat = info.lat;
+    const baseLng = info.lng;
 
-  for (const ph of pharmacies) {
-    await prisma.pharmacy.create({ data: ph });
+    await prisma.pharmacy.create({
+      data: {
+        name: `${city} Apollo Pharmacy`,
+        address: `Shop 1A, Metro Station Market, ${city}, ${state}`,
+        city,
+        state,
+        phone: `+91-${7700000000 + pharmacyCount}`,
+        lat: baseLat + (Math.random() - 0.5) * 0.02,
+        lng: baseLng + (Math.random() - 0.5) * 0.02,
+      }
+    });
+    pharmacyCount++;
   }
-  console.log(`🏪 Seeded ${pharmacies.length} pharmacies.`);
+  console.log(`🏪 Programmatically seeded ${pharmacyCount} pharmacies.`);
 
   // 5. Seed Medicines
   const medicines = [
@@ -354,8 +304,7 @@ async function main() {
   for (const m of medicines) {
     await prisma.medicine.create({ data: m });
   }
-  console.log(`💊 Seeded ${medicines.length} medicines.`);
-
+  console.log(`💊 Seeded ${medicines.length} medicine records.`);
   console.log("✅ Database seeding completed successfully!");
 }
 
