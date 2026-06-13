@@ -183,6 +183,7 @@ export default function Index() {
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedResultTab, setSelectedResultTab] = useState<"all" | "hospitals" | "blood" | "medicine" | "triage">("all");
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const console3DRef = useRef<HTMLDivElement>(null);
   const [analytics, setAnalytics] = useState<any>(null);
 
   // macOS simulation state machine
@@ -277,6 +278,58 @@ export default function Index() {
       .then(res => res.ok ? res.json() : null)
       .then(data => setAnalytics(data))
       .catch(err => console.error("Failed to load analytics", err));
+  }, []);
+
+  // 3D Floating/Tilt effect for Active Registry Scan
+  useEffect(() => {
+    const card = console3DRef.current;
+    if (!card) return;
+
+    // Default static pose
+    card.style.transform = "perspective(1200px) rotateY(-8deg) rotateX(4deg)";
+    card.style.boxShadow = "30px 30px 80px rgba(0, 0, 0, 0.45)";
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const rect = card.getBoundingClientRect();
+      const width = rect.width;
+      const height = rect.height;
+
+      // Cursor position relative to center of the card
+      const mouseX = e.clientX - rect.left - width / 2;
+      const mouseY = e.clientY - rect.top - height / 2;
+
+      // Normalized offsets (-1 to 1)
+      const normX = mouseX / (width / 2);
+      const normY = mouseY / (height / 2);
+
+      // Map offset to rotation range (-12deg to +12deg)
+      const degX = -normY * 12;
+      const degY = normX * 12;
+
+      // Dynamic shadow offset based on tilt position for realistic lighting
+      const shadowX = 30 - normX * 15;
+      const shadowY = 30 - normY * 15;
+
+      // Apply fast tracking transition on mouse move
+      card.style.transition = "transform 0.1s ease-out, box-shadow 0.15s ease-out";
+      card.style.transform = `perspective(1200px) rotateX(${degX}deg) rotateY(${degY}deg)`;
+      card.style.boxShadow = `${shadowX}px ${shadowY}px 80px rgba(0, 0, 0, 0.55)`;
+    };
+
+    const handleMouseLeave = () => {
+      // Smooth reset transition back to static pose
+      card.style.transition = "transform 0.4s ease-out, box-shadow 0.4s ease-out";
+      card.style.transform = "perspective(1200px) rotateY(-8deg) rotateX(4deg)";
+      card.style.boxShadow = "30px 30px 80px rgba(0, 0, 0, 0.45)";
+    };
+
+    card.addEventListener("mousemove", handleMouseMove);
+    card.addEventListener("mouseleave", handleMouseLeave);
+
+    return () => {
+      card.removeEventListener("mousemove", handleMouseMove);
+      card.removeEventListener("mouseleave", handleMouseLeave);
+    };
   }, []);
 
 
@@ -529,11 +582,13 @@ export default function Index() {
             style={{ perspective: 1200 }}
           >
             <div
+              ref={console3DRef}
               className="bg-card border border-border rounded-lg overflow-hidden text-left"
               style={{
                 transformStyle: "preserve-3d",
                 transform: "perspective(1200px) rotateY(-8deg) rotateX(4deg)",
                 boxShadow: "30px 30px 80px rgba(0, 0, 0, 0.45)",
+                transition: "transform 0.4s ease-out, box-shadow 0.4s ease-out",
               }}
             >
               {/* macOS Window Header Bar */}
