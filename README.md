@@ -9,10 +9,13 @@ SwasthAI is a production-ready, full-stack premium healthcare platform designed 
 ### 1. Main Homepage & 3D Interactive Console
 ![Main Homepage & 3D Showcase](docs/screenshots/1_dashboard_main.png)
 
-### 2. Interactive Proximity GIS Map
+### 2. Proximity-Sorted Hospital Bed Finder
+![Hospital Bed Finder](docs/screenshots/2_hospital_beds.png)
+
+### 3. Interactive Proximity GIS Map
 ![Interactive Leaflet Map](docs/screenshots/7_interactive_map.png)
 
-### 3. AI Medicine & Jan Aushadhi Savings Calculator
+### 4. AI Medicine & Jan Aushadhi Savings Calculator
 ![Medicine Savings Calculator](docs/screenshots/4_medicine_pricing.png)
 
 ---
