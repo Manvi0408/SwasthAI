@@ -81,37 +81,37 @@ export default function Hospitals() {
   }, [searchTerm, selectedType, userLat, userLng]);
 
   return (
-    <div className="w-full min-h-screen bg-background text-foreground flex flex-col">
+    <div className="w-full min-h-screen bg-black text-zinc-100 flex flex-col grid-bg">
       <Navigation />
-      <div className="pt-24 pb-12 flex-grow">
+      <div className="pt-28 pb-16 flex-grow bg-black/60">
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             className="text-center mb-10"
           >
-            <h1 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent mb-4">
+            <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white mb-3">
               {t("hospitals.title")}
             </h1>
-            <p className="text-lg text-foreground/60 max-w-xl mx-auto">
+            <p className="text-xs text-zinc-400 max-w-lg mx-auto">
               Find emergency rooms, government trauma facilities, cardiac centers, and general hospital units in real time.
             </p>
           </motion.div>
 
           {/* Search, Location, & Filters panel */}
-          <div className="glass rounded-2xl p-5 mb-8 space-y-4 border border-white/20">
-            <div className="flex flex-col md:flex-row gap-4">
+          <div className="bg-zinc-950 border border-zinc-900 rounded-xl p-5 mb-8 space-y-4 shadow-2xl">
+            <div className="flex flex-col md:flex-row gap-3">
               
               {/* Search text field */}
-              <div className="flex-1 bg-white/40 dark:bg-slate-800/40 rounded-xl px-4 py-3 border border-border/40 flex items-center space-x-3">
-                <Search className="w-5 h-5 text-primary" />
+              <div className="flex-1 bg-zinc-900 rounded-lg px-4 py-2 border border-zinc-800 flex items-center space-x-3 focus-within:ring-1 focus-within:ring-zinc-700 focus-within:border-zinc-700">
+                <Search className="w-4 h-4 text-zinc-500" />
                 <input
                   type="text"
                   placeholder={t("hospitals.search") + "..."}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="flex-1 bg-transparent outline-none text-foreground text-sm sm:text-base placeholder-foreground/50"
+                  className="flex-1 bg-transparent outline-none text-white text-sm placeholder-zinc-500"
                 />
               </div>
 
@@ -120,25 +120,25 @@ export default function Hospitals() {
                 type="button"
                 onClick={handleAcquireLocation}
                 disabled={fetchingLoc}
-                className="px-5 py-3 rounded-xl bg-primary/10 border border-primary/20 text-primary font-bold text-sm hover:bg-primary/20 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                className="px-4 py-2 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-300 font-bold text-xs hover:bg-zinc-800 hover:text-white transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-sm"
               >
-                <Crosshair className={`w-4 h-4 ${fetchingLoc ? "animate-spin" : ""}`} />
+                <Crosshair className={`w-3.5 h-3.5 ${fetchingLoc ? "animate-spin" : ""}`} />
                 {fetchingLoc ? "Locating..." : userLat ? "Refetch Location" : "Acquire GPS"}
               </button>
 
             </div>
 
             {/* Category selection scroll bar */}
-            <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-primary/10">
+            <div className="flex gap-1.5 overflow-x-auto pb-1.5 scrollbar-thin scrollbar-thumb-zinc-800">
               {categories.map((cat) => (
                 <button
                   key={cat}
                   type="button"
                   onClick={() => setSelectedType(cat)}
-                  className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all border whitespace-nowrap ${
+                  className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold border whitespace-nowrap transition-all cursor-pointer ${
                     selectedType === cat
-                      ? "bg-gradient-to-r from-primary to-accent border-primary text-white shadow shadow-primary/20"
-                      : "bg-white/40 dark:bg-slate-800/40 border-border/40 text-foreground/75 hover:bg-white/60"
+                      ? "bg-white border-white text-black shadow-sm"
+                      : "bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-850"
                   }`}
                 >
                   {cat === "All" ? t("hospitals.filter") : cat}
@@ -147,53 +147,53 @@ export default function Hospitals() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
             
             {/* Grid listings */}
-            <div className="lg:col-span-2 space-y-6">
+            <div className="lg:col-span-8 space-y-4">
               {loading ? (
                 <div className="text-center py-12">
-                  <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-                  <p className="text-foreground/60">Locating hospitals...</p>
+                  <div className="w-8 h-8 border-4 border-zinc-800 border-t-accent rounded-full animate-spin mx-auto mb-3" />
+                  <p className="text-xs text-zinc-500">Locating hospitals...</p>
                 </div>
               ) : hospitals.length === 0 ? (
-                <div className="text-center py-12 glass rounded-2xl border border-border/50">
-                  <p className="text-foreground/50 text-base font-bold">No hospitals found matching criteria.</p>
+                <div className="text-center py-12 bg-zinc-950 rounded-xl border border-zinc-900">
+                  <p className="text-zinc-500 text-sm font-semibold">No hospitals found matching criteria.</p>
                 </div>
               ) : (
-                <div className="space-y-6">
+                <div className="space-y-4">
                   {hospitals.map((bank, index) => (
                     <motion.div
                       key={bank.id}
-                      initial={{ opacity: 0, y: 15 }}
+                      initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.05 }}
-                      className="glass rounded-2xl p-6 border border-white/10 hover:shadow-xl transition-all"
+                      transition={{ delay: index * 0.03 }}
+                      className="bg-zinc-950 rounded-xl p-5 border border-zinc-900 hover:border-zinc-800 transition-all shadow-xl"
                     >
-                      <div className="flex justify-between items-start mb-3">
+                      <div className="flex justify-between items-start mb-2.5">
                         <div>
                           <div className="flex items-center gap-2">
-                            <h3 className="text-xl font-bold text-foreground">{bank.name}</h3>
-                            <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-primary/10 text-primary">
+                            <h3 className="text-base font-bold text-white">{bank.name}</h3>
+                            <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-zinc-900 text-zinc-400 border border-zinc-800">
                               {bank.type}
                             </span>
                           </div>
-                          <p className="text-sm text-foreground/60 flex items-center gap-1.5 mt-1.5">
-                            <MapPin className="w-4 h-4 text-primary" />
+                          <p className="text-xs text-zinc-500 flex items-center gap-1.5 mt-1">
+                            <MapPin className="w-3.5 h-3.5 text-zinc-650" />
                             {bank.address}
                           </p>
                         </div>
                         <div className="flex items-center space-x-1">
-                          <Star className="w-5 h-5 text-yellow-400 fill-yellow-400" />
-                          <span className="font-bold text-foreground">{bank.rating}</span>
+                          <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
+                          <span className="text-xs font-bold text-zinc-300">{bank.rating}</span>
                         </div>
                       </div>
 
-                      <div className="flex flex-wrap gap-2 mb-4 pb-4 border-b border-border/40">
+                      <div className="flex flex-wrap gap-1 mb-4 pb-4 border-b border-zinc-900">
                         {bank.services.split(", ").map((serv) => (
                           <span
                             key={serv}
-                            className="inline-block text-[10px] px-2.5 py-0.5 rounded-full bg-primary/5 text-primary border border-primary/10 font-semibold"
+                            className="inline-block text-[9px] px-2 py-0.5 rounded bg-zinc-900 text-zinc-400 border border-zinc-800 font-semibold"
                           >
                             {serv}
                           </span>
@@ -201,16 +201,16 @@ export default function Hospitals() {
                       </div>
 
                       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                        <div className="flex flex-wrap gap-4 text-xs text-foreground/60 font-semibold">
-                          <span className="text-red-500 font-bold bg-red-500/5 border border-red-500/10 px-2 py-0.5 rounded">
+                        <div className="flex flex-wrap gap-4 text-xs text-zinc-400 font-semibold">
+                          <span className="text-red-400 font-semibold bg-red-950/20 border border-red-900/60 px-2 py-0.5 rounded">
                             Beds: {bank.beds}
                           </span>
-                          <span className="flex items-center gap-1.5">
-                            <Phone className="w-3.5 h-3.5" />
+                          <span className="flex items-center gap-1">
+                            <Phone className="w-3 h-3 text-zinc-500" />
                             {bank.phone}
                           </span>
                           {bank.distance && (
-                            <span className="flex items-center gap-1 bg-black/5 dark:bg-white/5 px-2 py-0.5 rounded">
+                            <span className="flex items-center gap-1 bg-zinc-900 border border-zinc-800 px-2 py-0.5 rounded text-zinc-400">
                               🗺️ {bank.distance}
                             </span>
                           )}
@@ -221,7 +221,7 @@ export default function Hospitals() {
                             href={`https://www.google.com/maps/dir/?api=1&destination=${bank.lat},${bank.lng}`}
                             target="_blank"
                             rel="noreferrer"
-                            className="flex-grow sm:flex-initial px-6 py-2 bg-gradient-to-r from-primary to-accent text-white font-bold rounded-lg hover:shadow-lg transition-all text-xs text-center"
+                            className="flex-grow sm:flex-initial px-4 py-2 bg-white hover:bg-zinc-200 text-black font-bold rounded-lg transition-colors text-xs text-center shadow-sm"
                           >
                             {t("hospitals.directions")}
                           </a>
@@ -234,25 +234,25 @@ export default function Hospitals() {
             </div>
 
             {/* Interactive Visual Map Layout */}
-            <div className="lg:col-span-1">
-              <div className="glass rounded-2xl p-6 border border-white/20 h-[500px] flex flex-col relative overflow-hidden bg-gradient-to-b from-primary/5 to-transparent">
-                <h3 className="text-base font-bold mb-4 flex items-center gap-1.5">
-                  <Crosshair className="w-4 h-4 text-primary animate-pulse" />
+            <div className="lg:col-span-4">
+              <div className="bg-zinc-950 rounded-xl p-5 border border-zinc-900 h-[500px] flex flex-col relative overflow-hidden shadow-2xl">
+                <h3 className="text-xs font-bold mb-4 flex items-center gap-1.5 text-zinc-200">
+                  <Crosshair className="w-4 h-4 text-accent animate-pulse" />
                   Live Resource Proximity Radar
                 </h3>
 
                 {/* Radar Grid Canvas Animation wrapper */}
-                <div className="flex-grow rounded-xl border border-border/50 bg-slate-900 flex items-center justify-center relative overflow-hidden">
-                  <div className="absolute inset-0 opacity-20 bg-[linear-gradient(rgba(0,150,255,0.07)_1px,_transparent_1px),_linear-gradient(90deg,_rgba(0,150,255,0.07)_1px,_transparent_1px)] bg-[size:20px_20px]" />
+                <div className="flex-grow rounded-lg border border-zinc-900 bg-black/40 flex items-center justify-center relative overflow-hidden">
+                  <div className="absolute inset-0 opacity-40 bg-[linear-gradient(rgba(255,255,255,0.01)_1px,_transparent_1px),_linear-gradient(90deg,_rgba(255,255,255,0.01)_1px,_transparent_1px)] bg-[size:20px_20px]" />
                   
                   {/* Radar sweeping animation */}
-                  <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-primary/5 to-primary/10 rounded-full animate-[spin_10s_linear_infinite] origin-center w-[300px] h-[300px] m-auto pointer-events-none" />
+                  <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-zinc-800/10 to-zinc-800/30 rounded-full animate-[spin_12s_linear_infinite] origin-center w-[280px] h-[280px] m-auto pointer-events-none" />
 
                   {/* Centered User Indicator */}
-                  <div className="w-6 h-6 rounded-full bg-primary/20 border-2 border-primary flex items-center justify-center z-10">
-                    <div className="w-2.5 h-2.5 bg-primary rounded-full animate-ping" />
+                  <div className="w-5 h-5 rounded-full bg-accent/20 border-2 border-accent flex items-center justify-center z-10">
+                    <div className="w-2 h-2 bg-accent rounded-full animate-ping" />
                   </div>
-                  <span className="absolute text-[10px] text-primary/80 font-bold mt-8">Your GPS Coordinates</span>
+                  <span className="absolute text-[9px] text-zinc-500 font-bold mt-8">Your Location</span>
 
                   {/* Hospital Markers flags placement */}
                   {hospitals.slice(0, 4).map((h, i) => {
@@ -268,8 +268,8 @@ export default function Hospitals() {
                         className="absolute text-center flex flex-col items-center group cursor-pointer"
                         style={offsets[i % offsets.length]}
                       >
-                        <MapPin className="w-5 h-5 text-red-500 fill-red-500 group-hover:scale-125 transition-transform" />
-                        <span className="text-[9px] bg-slate-950/80 text-white border border-white/10 px-1 py-0.5 rounded shadow mt-1 opacity-80 max-w-[80px] truncate block">
+                        <MapPin className="w-4 h-4 text-red-500 fill-red-500 group-hover:scale-125 transition-transform" />
+                        <span className="text-[8px] bg-zinc-950 text-white px-1.5 py-0.5 border border-zinc-850 rounded shadow mt-1 opacity-90 max-w-[80px] truncate block font-semibold">
                           {h.name}
                         </span>
                       </div>
@@ -277,7 +277,7 @@ export default function Hospitals() {
                   })}
                 </div>
 
-                <p className="text-[10px] text-foreground/50 mt-4 leading-relaxed">
+                <p className="text-[9px] text-zinc-500 mt-4 leading-relaxed font-semibold">
                   Map representation features simulated GPS proximity indices based on the India digital health grid registry.
                 </p>
               </div>

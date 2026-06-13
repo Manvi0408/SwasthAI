@@ -1,5 +1,5 @@
 /** @import must precede all other statements */
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -7,98 +7,93 @@
 
 @layer base {
   /**
-   * Tailwind CSS theme - Healthcare Premium Colors
-   * Primary: #60A5FA (Sky Blue)
-   * Secondary: #93C5FD (Light Blue)
-   * Accent: #38BDF8 (Cyan)
-   * Background: #F8FCFF (Light Blue-White)
+   * Tailwind CSS theme - Premium SaaS Dark Theme (Manthan Quest Aesthetic)
+   * Accent: #2563eb (Royal Blue)
+   * Border: #18181b (Zinc-900) or #27272a (Zinc-800)
+   * Background: #000000 (Pure Black)
   */
   :root {
-    /* Light Mode */
-    --background: 208 100% 97.3%;
-    --foreground: 210 40% 10%;
+    --background: 0 0% 100%; /* Pure White */
+    --foreground: 240 10% 3.9%; /* Zinc-950 */
 
     --card: 0 0% 100%;
-    --card-foreground: 210 40% 10%;
+    --card-foreground: 240 10% 3.9%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 210 40% 10%;
+    --popover-foreground: 240 10% 3.9%;
 
-    --primary: 204 90% 64%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 240 5.9% 10%; /* Zinc-900 */
+    --primary-foreground: 0 0% 98%;
 
-    --secondary: 206 88% 73%;
-    --secondary-foreground: 210 40% 10%;
+    --secondary: 240 4.8% 95.9%; /* Zinc-100 */
+    --secondary-foreground: 240 5.9% 10%;
 
-    --muted: 208 14% 85%;
-    --muted-foreground: 210 20% 48%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
 
-    --accent: 188 94% 49%;
+    --accent: 221.2 83.2% 53.3%; /* Royal Blue */
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 100%;
+    --destructive-foreground: 0 0% 98%;
 
-    --border: 206 50% 85%;
-    --input: 206 50% 90%;
-    --ring: 204 90% 64%;
+    --border: 240 5.9% 90%; /* Zinc-200 */
+    --input: 240 5.9% 90%;
+    --ring: 221.2 83.2% 53.3%;
 
-    --radius: 0.75rem;
+    --radius: 0.375rem;
 
-    --sidebar-background: 208 100% 97.3%;
-    --sidebar-foreground: 210 40% 10%;
-    --sidebar-primary: 204 90% 64%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 188 94% 49%;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 240 10% 3.9%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 221.2 83.2% 53.3%;
     --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 206 50% 85%;
-    --sidebar-ring: 204 90% 64%;
+    --sidebar-border: 240 5.9% 90%;
+    --sidebar-ring: 221.2 83.2% 53.3%;
 
     /* Health specific */
-    --success: 134 61% 41%;
-    --emergency: 0 84% 60%;
+    --success: 142.1 76.2% 36.3%;
+    --emergency: 346.8 77.2% 49.8%;
   }
 
   .dark {
-    --background: 210 50% 5%;
-    --foreground: 208 100% 95%;
+    --background: 0 0% 0%; /* Pure Black */
+    --foreground: 0 0% 98%; /* Zinc-50 */
 
-    --card: 210 50% 10%;
-    --card-foreground: 208 100% 95%;
+    --card: 240 10% 3.9%; /* Zinc-950 (#09090b) */
+    --card-foreground: 0 0% 98%;
 
-    --popover: 210 50% 8%;
-    --popover-foreground: 208 100% 95%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
 
-    --primary: 204 80% 55%;
-    --primary-foreground: 210 50% 5%;
+    --primary: 0 0% 98%; /* Zinc-50 */
+    --primary-foreground: 240 5.9% 10%;
 
-    --secondary: 206 75% 60%;
-    --secondary-foreground: 210 50% 5%;
+    --secondary: 240 3.7% 15.9%; /* Zinc-800 */
+    --secondary-foreground: 0 0% 98%;
 
-    --muted: 210 30% 30%;
-    --muted-foreground: 208 30% 70%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
 
-    --accent: 188 94% 55%;
-    --accent-foreground: 210 50% 5%;
+    --accent: 221.2 83.2% 53.3%; /* Royal Blue */
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 72% 51%;
-    --destructive-foreground: 208 100% 95%;
+    --destructive: 346.8 77.2% 49.8%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 210 35% 20%;
-    --input: 210 35% 25%;
-    --ring: 188 94% 55%;
+    --border: 240 5.9% 10%; /* Zinc-900 (#18181b) */
+    --input: 240 5.9% 10%;
+    --ring: 221.2 83.2% 53.3%;
 
-    --sidebar-background: 210 50% 8%;
-    --sidebar-foreground: 208 100% 95%;
-    --sidebar-primary: 204 80% 55%;
-    --sidebar-primary-foreground: 210 50% 5%;
-    --sidebar-accent: 188 94% 55%;
-    --sidebar-accent-foreground: 210 50% 5%;
-    --sidebar-border: 210 35% 20%;
-    --sidebar-ring: 188 94% 55%;
-
-    --success: 134 50% 50%;
-    --emergency: 0 84% 50%;
+    --sidebar-background: 240 10% 3.9%;
+    --sidebar-foreground: 0 0% 98%;
+    --sidebar-primary: 0 0% 98%;
+    --sidebar-primary-foreground: 240 5.9% 10%;
+    --sidebar-accent: 221.2 83.2% 53.3%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 240 5.9% 10%;
+    --sidebar-ring: 221.2 83.2% 53.3%;
   }
 }
 
@@ -113,7 +108,8 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: "Inter", system-ui, -apple-system, sans-serif;
+    font-family: "Plus Jakarta Sans", "Geist", system-ui, -apple-system, sans-serif;
+    letter-spacing: -0.01em;
   }
 
   :where(p, span, li, h1, h2, h3, h4, h5, h6, a, button, label, td, th) {
@@ -128,36 +124,79 @@
   }
 
   h1 {
-    @apply font-bold tracking-tight;
+    @apply font-bold tracking-tight text-foreground dark:text-white;
   }
 
   h2 {
-    @apply font-bold tracking-tight;
+    @apply font-bold tracking-tight text-foreground dark:text-white;
   }
 
   h3 {
-    @apply font-semibold;
+    @apply font-semibold text-foreground dark:text-white;
   }
 }
 
 @layer components {
+  /* Premium Dark SaaS Panel styling */
   .glass {
-    @apply backdrop-blur-md bg-white/40 dark:bg-black/40 border border-white/20 dark:border-white/10;
+    @apply bg-zinc-950 border border-zinc-800/80 shadow-[0_4px_20px_rgba(0,0,0,0.8)];
   }
 
   .glass-dark {
-    @apply backdrop-blur-lg bg-black/50 border border-white/10;
+    @apply bg-zinc-900 border border-zinc-800/80 shadow-[0_4px_20px_rgba(0,0,0,0.8)];
   }
 
   .gradient-text {
-    @apply bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent;
+    @apply text-white;
   }
 
   .glow-primary {
-    @apply shadow-lg shadow-primary/30;
+    @apply shadow-none;
   }
 
   .glow-accent {
-    @apply shadow-lg shadow-accent/30;
+    @apply shadow-none;
+  }
+
+  /* Grid pattern for premium design */
+  .grid-bg {
+    background-color: hsl(var(--background));
+    background-image: radial-gradient(rgba(24, 24, 27, 0.08) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  .dark .grid-bg {
+    background-color: #000000;
+    background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  }
+
+  /* Editorial Serif Italic text formatting */
+  .serif-italic {
+    font-family: "Playfair Display", Georgia, "Times New Roman", serif;
+    font-style: italic;
+    font-weight: 400;
   }
 }
+
+@keyframes marquee-left {
+  0% { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-50%, 0, 0); }
+}
+
+@keyframes marquee-right {
+  0% { transform: translate3d(-50%, 0, 0); }
+  100% { transform: translate3d(0, 0, 0); }
+}
+
+.animate-marquee-left {
+  display: flex;
+  width: max-content;
+  animation: marquee-left 40s linear infinite;
+}
+
+.animate-marquee-right {
+  display: flex;
+  width: max-content;
+  animation: marquee-right 40s linear infinite;
+}
+

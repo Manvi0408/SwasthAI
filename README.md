@@ -21,56 +21,61 @@ Emergency healthcare coordination in India is highly fragmented, leading to crit
 SwasthAI acts as a centralized, high-fidelity healthcare dashboard:
 
 ### 1. Interactive 3D Hero Landing Page
-Featuring a WebGL-based **React Three Fiber interactive DNA Double Helix** and background space-dust particles. Moving the cursor tilts and rotates the helix in real-time (parallax depth effect), styled to keep headings and the global search engine perfectly readable.
+Featuring a WebGL-based **React Three Fiber interactive DNA Double Helix** and background space-dust particles. The header is styled with a gorgeous, high-end Georgia serif typography particle-convergence reveal.
 
 ![Premium 3D Hero Background](docs/screenshots/1_dashboard_main.png)
 
-### 2. Proximity-Sorted Hospital Bed Finder
+### 2. Simulated 3D Showcase macOS Active Registry Scan Console
+Renders a simulated live health grid scanner and responder dispatch console. Styled in a premium, static 3D floating showcase pose with real depth layering (`preserve-3d`) and deep drop shadows.
+
+![Active Registry Scan 3D Showcase](docs/screenshots/active_registry_scan.png)
+
+### 3. Proximity-Sorted Hospital Bed Finder
 Utilizes the **Haversine formula** to calculate distance between user coordinates and seeded medical institutions, sorting AIIMS, Government, Private, and Trauma centers by proximity and displaying bed availability.
 
 ![Hospital Bed Finder](docs/screenshots/2_hospital_beds.png)
 
-### 3. Live Blood Stock Inventory Lookup
+### 4. Live Blood Stock Inventory Lookup
 Searchable directory by state, city, and blood type showing detailed unit levels (A+, O-, AB+, etc.) to find matching units instantly.
 
 ![Blood Stock Finder](docs/screenshots/3_blood_availability.png)
 
-### 4. Branded vs. Generic Jan Aushadhi Savings Calculator
+### 5. Branded vs. Generic Jan Aushadhi Savings Calculator
 Calculates and visualizes savings (often 75%+ cost reduction) by matching branded search terms against exact generic medicine equivalents.
 
 ![Medicine Savings Calculator](docs/screenshots/4_medicine_pricing.png)
 
-### 5. AI Triage Command Center
+### 6. AI Triage Command Center
 An interactive symptom analyzer styled like premium search menus. Categorizes symptom severity (Critical, Moderate, Mild), highlights possible diagnoses, and recommends immediate actionable medical paths.
 
 ![AI Symptom Triage](docs/screenshots/5_ai_triage.png)
 
-### 6. One-Click SOS Panic System
+### 7. One-Click SOS Panic System
 Triggers a 5-second countdown to prevent accidental activations, acquires live GPS coordinates, logs the emergency, and instantly routes first-aid steps along with the nearest trauma hospital coordinates.
 
 ![One-Click SOS Panic System](docs/screenshots/6_emergency_sos.png)
 
-### 7. Interactive GIS Map with Route Suggestion Vectors
+### 8. Interactive GIS Map with Route Suggestion Vectors
 Renders a live Leaflet-powered GIS map pinning nearest hospitals, blood banks, and pharmacies, calculating nearest target paths, and drawing route vectors.
 
 ![Interactive Leaflet Map](docs/screenshots/7_interactive_map.png)
 
-### 8. Lifestyle Risk Prediction Center
+### 9. Lifestyle Risk Prediction Center
 Processes patient metrics (Age, BP, BMI, habits, family history) to output risk probabilities for Heart Disease, Stroke, and Diabetes alongside dynamic circular progress metrics.
 
 ![Lifestyle Risk Prediction](docs/screenshots/8_health_risk.png)
 
-### 9. Vision-Based Wound Scanner & Injury Detector
+### 10. Vision-Based Wound Scanner & Injury Detector
 Processes images of cuts, burns, fractures, skin infections, bruises, and swelling using Gemini Vision / local keyword matching to output severity level confidence metrics.
 
 ![Vision-Based Wound Scanner](docs/screenshots/9_injury_detection.png)
 
-### 10. AI Medical Report Decoder
+### 11. AI Medical Report Decoder
 Accepts PDF/JPG laboratory panel files and translates complex medical markers into simple, layperson explanations with specialist recommendations.
 
 ![AI Medical Report Decoder](docs/screenshots/10_report_analyzer.png)
 
-### 11. National Health Registry Analytics
+### 12. National Health Registry Analytics
 Dynamic charts (using Recharts) representing state-wise beds and blood inventories synchronized live with the backend database.
 
 ![Healthcare Analytics](docs/screenshots/11_analytics_graph.png)

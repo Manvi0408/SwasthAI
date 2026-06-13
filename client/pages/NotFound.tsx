@@ -17,60 +17,54 @@ const NotFound = () => {
   }, [location.pathname]);
 
   return (
-    <div className="w-full">
+    <div className="w-full min-h-screen bg-black text-zinc-100 flex flex-col font-sans grid-bg">
       <Navigation />
-      <div className="min-h-screen pt-24 flex items-center justify-center bg-gradient-to-b from-background to-background/50">
+      <div className="flex-grow flex items-center justify-center pt-32 pb-24 bg-black/60">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-center max-w-2xl px-4 sm:px-6"
+          transition={{ duration: 0.4 }}
+          className="text-center max-w-xl px-6"
         >
-          <motion.div
-            animate={{ y: [0, -10, 0] }}
-            transition={{ duration: 2, repeat: Infinity }}
-            className="text-6xl sm:text-7xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent mb-4"
-          >
+          <div className="text-6xl font-black text-white mb-4 tracking-tighter">
             404
-          </motion.div>
+          </div>
 
-          <h1 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">
+          <h1 className="text-2xl font-bold text-white mb-3 tracking-tight">
             Page Not Found
           </h1>
 
-          <p className="text-base sm:text-lg text-foreground/70 mb-8 leading-relaxed">
+          <p className="text-xs text-zinc-400 mb-8 leading-relaxed">
             We couldn't find the page you're looking for. This page might be
             under development or the route you accessed doesn't exist.
           </p>
 
-          <div className="glass rounded-xl p-8 mb-8">
-            <p className="text-sm text-foreground/60 mb-4 font-mono break-all">
-              {location.pathname}
+          <div className="bg-zinc-950 border border-zinc-900 rounded-lg p-6 mb-8 text-left shadow-2xl">
+            <p className="text-[11px] text-zinc-500 font-mono break-all mb-3 select-all bg-zinc-900/60 p-2 rounded border border-zinc-800/40">
+              Path: {location.pathname}
             </p>
-            <p className="text-sm text-foreground/60">
-              If you believe this is an error, please contact our support team.
+            <p className="text-xs text-zinc-405 leading-normal font-medium">
+              If you believe this is an error, please let us know or return to the dashboard.
             </p>
           </div>
 
           <motion.div
-            initial={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center"
+            transition={{ duration: 0.4, delay: 0.1 }}
+            className="flex flex-col sm:flex-row gap-3 justify-center text-xs font-semibold"
           >
             <Link to="/">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="px-8 py-4 bg-gradient-to-r from-primary to-accent text-white font-bold rounded-lg shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 w-full sm:w-auto"
+              <button
+                className="px-6 py-2.5 bg-white hover:bg-zinc-200 text-black font-semibold rounded-lg shadow-sm flex items-center justify-center gap-2 w-full sm:w-auto transition-colors cursor-pointer"
               >
-                <Home className="w-5 h-5" />
+                <Home className="w-4 h-4" />
                 Back to Home
-              </motion.button>
+              </button>
             </Link>
-            <button className="px-8 py-4 glass text-primary font-bold rounded-lg hover:bg-white/60 transition-all flex items-center justify-center gap-2 w-full sm:w-auto">
+            <button className="px-6 py-2.5 border border-zinc-800 bg-zinc-900 hover:bg-zinc-850 text-zinc-300 font-semibold rounded-lg flex items-center justify-center gap-2 w-full sm:w-auto transition-colors cursor-pointer">
               Contact Support
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </motion.div>
         </motion.div>

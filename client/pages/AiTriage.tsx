@@ -131,56 +131,61 @@ export default function AiTriage() {
     }
   };
 
-  const getSeverityColor = (sev: string) => {
+  const getSeverityBadgeClass = (sev: string) => {
     switch (sev.toLowerCase()) {
       case "high":
-        return "border-red-500 bg-red-500/10 text-red-500";
+        return "border-red-900/60 bg-red-950/30 text-red-400";
       case "medium":
-        return "border-amber-500 bg-amber-500/10 text-amber-500";
+        return "border-amber-900/60 bg-amber-950/30 text-amber-400";
       default:
-        return "border-green-500 bg-green-500/10 text-green-500";
+        return "border-green-900/60 bg-green-950/30 text-green-400";
     }
   };
 
   return (
-    <div className="w-full min-h-screen bg-background text-foreground flex flex-col">
+    <div className="w-full min-h-screen bg-black text-zinc-100 flex flex-col font-sans grid-bg">
       <Navigation />
-      <div className="pt-24 pb-12 flex-grow">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6">
+      <div className="pt-32 pb-24 flex-grow bg-black/60">
+        <div className="max-w-4xl mx-auto px-6 sm:px-8">
           
+          {/* Header */}
           <motion.div
-            initial={{ opacity: 0, y: 15 }}
+            initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center mb-8"
+            transition={{ duration: 0.4 }}
+            className="text-center mb-12"
           >
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent mb-3 flex items-center justify-center gap-2">
-              <Stethoscope className="w-9 h-9 text-primary animate-pulse" />
+            <span className="text-xs font-semibold tracking-wider text-accent uppercase mb-3 block">
+              Clinical Assistant
+            </span>
+            <h1 className="text-4xl font-extrabold tracking-tight text-white mb-4 flex items-center justify-center gap-2">
+              <Stethoscope className="w-8 h-8 text-white" />
               AI Clinical Assistant Grid
             </h1>
-            <p className="text-base sm:text-lg text-foreground/60 max-w-xl mx-auto">
+            <p className="text-xs text-zinc-400 max-w-xl mx-auto leading-relaxed">
               Scan symptom profiles or upload medical diagnostic reports to decode abnormalities instantly.
             </p>
           </motion.div>
 
           {/* Tab Selection */}
-          <div className="flex justify-center mb-6">
-            <div className="inline-flex p-1 bg-black/5 dark:bg-white/5 border border-border/80 rounded-xl">
+          <div className="flex justify-center mb-8">
+            <div className="inline-flex p-1 bg-zinc-900 border border-zinc-800 rounded-lg">
               <button
                 onClick={() => setActiveTab("symptoms")}
-                className={`px-5 py-2 text-xs font-bold rounded-lg transition-all ${
+                className={`px-4 py-1.5 text-xs font-semibold rounded-md transition-all duration-200 cursor-pointer ${
                   activeTab === "symptoms"
-                    ? "bg-primary text-white shadow"
-                    : "text-foreground/75 hover:text-primary"
+                    ? "bg-white text-black shadow-sm"
+                    : "text-zinc-400 hover:text-white"
                 }`}
               >
                 Symptom Analysis
               </button>
               <button
                 onClick={() => setActiveTab("reports")}
-                className={`px-5 py-2 text-xs font-bold rounded-lg transition-all ${
+                className={`px-4 py-1.5 text-xs font-semibold rounded-md transition-all duration-200 cursor-pointer ${
                   activeTab === "reports"
-                    ? "bg-primary text-white shadow"
-                    : "text-foreground/75 hover:text-primary"
+                    ? "bg-white text-black shadow-sm"
+                    : "text-zinc-400 hover:text-white"
                 }`}
               >
                 Medical Report Analysis
@@ -192,10 +197,10 @@ export default function AiTriage() {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="p-4 bg-amber-500/15 border border-amber-500/25 rounded-2xl text-amber-600 dark:text-amber-500 text-xs flex items-start gap-2.5 mb-8"
+            className="p-4 bg-amber-950/20 border border-amber-900/60 rounded-lg text-amber-400 text-xs flex items-start gap-2.5 mb-8 leading-relaxed"
           >
-            <AlertTriangle className="w-5 h-5 flex-shrink-0 mt-0.5" />
-            <p className="leading-relaxed">
+            <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5 text-amber-500 animate-pulse" />
+            <p>
               <span className="font-bold">Disclaimer:</span> This AI assistant provides informational guidance only and does not replace professional medical diagnosis, prescription advice, or emergency medical services.
             </p>
           </motion.div>
@@ -204,16 +209,16 @@ export default function AiTriage() {
             {activeTab === "symptoms" ? (
               <motion.div
                 key="symptoms-tab"
-                initial={{ opacity: 0, y: 10 }}
+                initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
+                exit={{ opacity: 0, y: -8 }}
                 className="space-y-6"
               >
                 {/* Symptom Analyzer Console */}
-                <div className="glass rounded-2xl p-6 border border-white/20">
+                <div className="bg-zinc-950 border border-zinc-900 rounded-lg p-6 shadow-2xl">
                   <form onSubmit={handleTriageSubmit} className="space-y-4">
                     <div>
-                      <label className="block text-sm font-semibold mb-2 text-foreground/80">
+                      <label className="block text-[10px] font-bold uppercase text-zinc-500 tracking-wider mb-2">
                         {t("triage.symptoms")}
                       </label>
                       <textarea
@@ -221,15 +226,15 @@ export default function AiTriage() {
                         placeholder="e.g. I have mild chest discomfort and a dry cough since morning, or I have been feeling dizzy and my left arm feels a bit weak..."
                         value={symptoms}
                         onChange={(e) => setSymptoms(e.target.value)}
-                        className="w-full bg-white/50 dark:bg-slate-800/50 border border-border rounded-xl px-4 py-3 outline-none resize-none placeholder-foreground/30 text-base"
+                        className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-3 outline-none resize-none placeholder-zinc-550 text-white text-sm focus:border-zinc-700 focus:ring-zinc-700 transition-all"
                       />
                     </div>
                     <button
                       type="submit"
                       disabled={loadingSymptoms}
-                      className="w-full py-3.5 bg-gradient-to-r from-primary to-accent text-white font-bold rounded-xl hover:shadow-lg transition-all text-sm flex items-center justify-center gap-2 cursor-pointer"
+                      className="w-full py-3 bg-white hover:bg-zinc-200 text-black font-semibold rounded-lg shadow-sm transition-all text-xs flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
                     >
-                      <Send className="w-4 h-4" />
+                      <Send className="w-3.5 h-3.5" />
                       {loadingSymptoms ? "Analyzing Symptoms..." : "Run AI Health Assessment"}
                     </button>
                   </form>
@@ -238,54 +243,56 @@ export default function AiTriage() {
                 {/* Triage Results Console */}
                 {symptomsResult && (
                   <motion.div
-                    initial={{ opacity: 0, y: 15 }}
+                    initial={{ opacity: 0, y: 12 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="glass rounded-2xl p-6 border border-white/20"
+                    className="bg-zinc-950 border border-zinc-900 rounded-lg p-6 shadow-2xl space-y-6"
                   >
-                    <h3 className="text-xl font-bold mb-4 border-b border-border/50 pb-3 flex items-center gap-2">
-                      <Activity className="w-5 h-5 text-primary" />
+                    <h3 className="text-sm font-semibold text-white border-b border-zinc-900 pb-3 flex items-center gap-2">
+                      <Activity className="w-4 h-4 text-accent animate-pulse" />
                       {t("triage.analysis")} Results
                     </h3>
 
                     {/* Triage Metas */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-                      <div className={`p-4 rounded-xl border text-center font-bold ${getSeverityColor(symptomsResult.severity)}`}>
-                        <div className="text-xs uppercase opacity-75 mb-1">{t("triage.severity")}</div>
-                        <div className="text-lg">{symptomsResult.severity}</div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className={`p-4 rounded-lg border text-center font-bold flex flex-col items-center justify-center ${getSeverityBadgeClass(symptomsResult.severity)}`}>
+                        <div className="text-[10px] uppercase opacity-75 mb-1 tracking-wider">{t("triage.severity")}</div>
+                        <div className="text-base font-bold">{symptomsResult.severity}</div>
                       </div>
-                      <div className="p-4 rounded-xl border border-border/60 bg-black/5 dark:bg-white/5 text-center">
-                        <div className="text-xs uppercase text-foreground/50 mb-1">Recommended Facility</div>
-                        <div className="text-lg font-bold text-foreground">{symptomsResult.hospitalType}</div>
+                      <div className="p-4 rounded-lg border border-zinc-800 bg-zinc-900 text-center flex flex-col items-center justify-center">
+                        <div className="text-[10px] uppercase text-zinc-500 mb-1 tracking-wider">Recommended Facility</div>
+                        <div className="text-base font-bold text-white">{symptomsResult.hospitalType}</div>
                       </div>
                     </div>
 
                     {/* Suspected Conditions */}
-                    <div className="space-y-4 mb-6">
-                      <h4 className="font-bold text-sm text-foreground/70 uppercase">Potential Conditions</h4>
-                      {symptomsResult.possibleConditions.length > 0 ? (
-                        symptomsResult.possibleConditions.map((cond) => (
-                          <div key={cond.name} className="p-4 bg-white/40 dark:bg-slate-800/40 rounded-xl border border-border/30">
-                            <div className="flex justify-between items-center mb-1">
-                              <h5 className="font-bold text-foreground">{cond.name}</h5>
-                              <span className="text-xs font-bold px-2 py-0.5 rounded bg-primary/10 text-primary">
-                                Likelihood: {cond.likelihood}
-                              </span>
+                    <div className="space-y-4">
+                      <h4 className="font-semibold text-xs text-zinc-500 uppercase tracking-wider">Potential Conditions</h4>
+                      <div className="space-y-3">
+                        {symptomsResult.possibleConditions.length > 0 ? (
+                          symptomsResult.possibleConditions.map((cond) => (
+                            <div key={cond.name} className="p-4 bg-zinc-900/40 rounded-lg border border-zinc-800">
+                              <div className="flex justify-between items-center mb-1 flex-wrap gap-2">
+                                <h5 className="font-bold text-xs text-white">{cond.name}</h5>
+                                <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-zinc-950 border border-zinc-800 text-zinc-300">
+                                  Likelihood: {cond.likelihood}
+                                </span>
+                              </div>
+                              <p className="text-xs text-zinc-400 leading-relaxed mt-1.5">{cond.description}</p>
                             </div>
-                            <p className="text-xs text-foreground/60 leading-relaxed">{cond.description}</p>
-                          </div>
-                        ))
-                      ) : (
-                        <p className="text-xs text-foreground/50">No severe specific matches. Follow standard resting protocols.</p>
-                      )}
+                          ))
+                        ) : (
+                          <p className="text-xs text-zinc-500">No severe specific matches. Follow standard resting protocols.</p>
+                        )}
+                      </div>
                     </div>
 
                     {/* Recommended Action */}
-                    <div className="p-4 bg-primary/15 border border-primary/25 rounded-xl">
-                      <h4 className="font-bold text-sm text-primary mb-1 flex items-center gap-1">
-                        <Info className="w-4 h-4" />
+                    <div className="p-4 bg-zinc-900 border border-zinc-800 rounded-lg">
+                      <h4 className="font-bold text-xs text-white mb-1 flex items-center gap-1.5">
+                        <Info className="w-4 h-4 text-accent" />
                         {t("triage.action")}
                       </h4>
-                      <p className="text-sm font-semibold text-foreground">{symptomsResult.action}</p>
+                      <p className="text-xs text-zinc-300 leading-relaxed font-semibold">{symptomsResult.action}</p>
                     </div>
                   </motion.div>
                 )}
@@ -293,23 +300,23 @@ export default function AiTriage() {
             ) : (
               <motion.div
                 key="reports-tab"
-                initial={{ opacity: 0, y: 10 }}
+                initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
+                exit={{ opacity: 0, y: -8 }}
                 className="space-y-6"
               >
                 {/* Medical Report Upload Console */}
-                <div className="glass rounded-2xl p-6 border border-white/20">
-                  <h2 className="text-lg font-bold mb-4">Upload Diagnostic Report</h2>
+                <div className="bg-zinc-950 border border-zinc-900 rounded-lg p-6 shadow-2xl">
+                  <h2 className="text-sm font-semibold text-white mb-4">Upload Diagnostic Report</h2>
                   <form onSubmit={handleReportSubmit} className="space-y-4">
-                    <div className="border-2 border-dashed border-border rounded-xl p-6 text-center cursor-pointer hover:bg-black/5 dark:hover:bg-white/5 transition-all relative">
-                      <Upload className="w-8 h-8 text-foreground/40 mx-auto mb-2" />
+                    <div className="border border-dashed border-zinc-800 hover:border-zinc-700 bg-zinc-900/40 rounded-lg p-8 text-center cursor-pointer transition-all relative">
+                      <Upload className="w-6 h-6 text-zinc-500 mx-auto mb-2" />
                       {reportFile ? (
-                        <p className="text-xs font-bold text-primary">{reportFile.name} ({(reportFile.size / 1024).toFixed(0)} KB)</p>
+                        <p className="text-xs font-bold text-accent">{reportFile.name} ({(reportFile.size / 1024).toFixed(0)} KB)</p>
                       ) : (
                         <div>
-                          <p className="text-xs font-bold text-foreground/60">Drag & drop or select diagnostic report file</p>
-                          <p className="text-[10px] text-foreground/45 mt-1">Supports PDF, PNG, JPG, JPEG (Max 5MB)</p>
+                          <p className="text-xs font-semibold text-zinc-400">Drag & drop or select diagnostic report file</p>
+                          <p className="text-[10px] text-zinc-500 mt-1">Supports PDF, PNG, JPG, JPEG (Max 5MB)</p>
                         </div>
                       )}
                       <input
@@ -322,9 +329,9 @@ export default function AiTriage() {
                     <button
                       type="submit"
                       disabled={loadingReport || !reportFile}
-                      className="w-full py-3.5 bg-gradient-to-r from-primary to-accent text-white font-bold rounded-xl hover:shadow-lg transition-all text-sm flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                      className="w-full py-3 bg-white hover:bg-zinc-200 text-black font-semibold rounded-lg shadow-sm transition-all text-xs flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
                     >
-                      <Send className="w-4 h-4" />
+                      <Send className="w-3.5 h-3.5" />
                       {loadingReport ? "Analyzing Report..." : "Start AI Report Verification"}
                     </button>
                   </form>
@@ -333,28 +340,28 @@ export default function AiTriage() {
                 {/* Report Analysis Results Console */}
                 {reportResult && (
                   <motion.div
-                    initial={{ opacity: 0, y: 15 }}
+                    initial={{ opacity: 0, y: 12 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="glass rounded-2xl p-6 border border-white/20 space-y-6"
+                    className="bg-zinc-950 border border-zinc-900 rounded-lg p-6 shadow-2xl space-y-6"
                   >
-                    <h3 className="text-xl font-bold border-b border-border/50 pb-3 flex items-center gap-2">
-                      <FileText className="w-5 h-5 text-primary" />
+                    <h3 className="text-sm font-semibold text-white border-b border-zinc-900 pb-3 flex items-center gap-2">
+                      <FileText className="w-4 h-4 text-accent animate-pulse" />
                       AI Report Explanation Results
                     </h3>
 
                     <div>
-                      <h4 className="text-xs font-black uppercase text-foreground/50 mb-1.5">Layperson Explanation</h4>
-                      <p className="text-sm font-semibold leading-relaxed text-foreground/80">{reportResult.simpleExplanation}</p>
+                      <h4 className="text-[10px] font-bold uppercase text-zinc-500 mb-1.5 tracking-wider">Layperson Explanation</h4>
+                      <p className="text-xs font-medium leading-relaxed text-zinc-300">{reportResult.simpleExplanation}</p>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {/* Abnormalities */}
-                      <div className="p-4 bg-red-500/5 border border-red-500/20 rounded-xl space-y-2">
-                        <h4 className="text-xs font-bold text-red-500 flex items-center gap-1">
-                          <AlertTriangle className="w-4 h-4" />
+                      <div className="p-4 bg-red-950/20 border border-red-900/50 rounded-lg space-y-2">
+                        <h4 className="text-xs font-bold text-red-400 flex items-center gap-1.5">
+                          <AlertTriangle className="w-3.5 h-3.5 text-red-500 animate-pulse" />
                           Detected Abnormalities
                         </h4>
-                        <ul className="text-xs space-y-1.5 text-foreground/85 list-disc pl-4 font-semibold">
+                        <ul className="text-xs space-y-1.5 text-zinc-450 list-disc pl-4 font-medium leading-relaxed">
                           {reportResult.abnormalities?.map((item: string, i: number) => (
                             <li key={i}>{item}</li>
                           ))}
@@ -362,23 +369,23 @@ export default function AiTriage() {
                       </div>
 
                       {/* Specialist recommendation */}
-                      <div className="p-4 bg-primary/5 border border-primary/20 rounded-xl space-y-2">
-                        <h4 className="text-xs font-bold text-primary flex items-center gap-1">
-                          <Stethoscope className="w-4 h-4" />
+                      <div className="p-4 bg-zinc-900 border border-zinc-800 rounded-lg space-y-2">
+                        <h4 className="text-xs font-bold text-white flex items-center gap-1.5">
+                          <Stethoscope className="w-3.5 h-3.5 text-accent" />
                           Recommended Specialist
                         </h4>
-                        <p className="text-sm font-black text-foreground">{reportResult.recommendedSpecialist}</p>
-                        <p className="text-[10px] text-foreground/50">Consult this specialist for a detailed medical review of these symptoms.</p>
+                        <p className="text-sm font-bold text-white">{reportResult.recommendedSpecialist}</p>
+                        <p className="text-[10px] text-zinc-500 leading-relaxed">Consult this specialist for a detailed medical review of these symptoms.</p>
                       </div>
                     </div>
 
                     {/* Next Steps */}
-                    <div className="p-4 bg-emerald-500/5 border border-emerald-500/20 rounded-xl space-y-2">
-                      <h4 className="text-xs font-bold text-emerald-600 flex items-center gap-1">
-                        <CheckCircle className="w-4 h-4" />
+                    <div className="p-4 bg-green-950/20 border border-green-900/50 rounded-lg space-y-2">
+                      <h4 className="text-xs font-bold text-green-400 flex items-center gap-1.5">
+                        <CheckCircle className="w-3.5 h-3.5 text-green-500" />
                         Actionable Next Steps
                       </h4>
-                      <ul className="text-xs space-y-1.5 text-foreground/85 list-decimal pl-4 font-semibold">
+                      <ul className="text-xs space-y-1.5 text-zinc-400 list-decimal pl-4 font-medium leading-relaxed">
                         {reportResult.nextSteps?.map((item: string, i: number) => (
                           <li key={i}>{item}</li>
                         ))}
@@ -386,11 +393,11 @@ export default function AiTriage() {
                     </div>
 
                     {/* Extracted text drawer */}
-                    <details className="p-3 border border-border/40 rounded-xl bg-white/20 dark:bg-slate-800/20">
-                      <summary className="text-xs font-bold text-foreground/60 cursor-pointer select-none">
+                    <details className="p-3 border border-zinc-805 rounded-lg bg-zinc-900/50">
+                      <summary className="text-xs font-semibold text-zinc-500 cursor-pointer select-none">
                         View Raw Extracted Document Text
                       </summary>
-                      <pre className="text-[10px] mt-2 bg-slate-950 text-slate-300 p-3 rounded-lg overflow-x-auto font-mono whitespace-pre-wrap">
+                      <pre className="text-[11px] mt-3 bg-zinc-950 text-zinc-400 p-4 rounded-lg overflow-x-auto font-mono whitespace-pre-wrap leading-relaxed border border-zinc-900">
                         {reportResult.extractedText}
                       </pre>
                     </details>
@@ -398,18 +405,18 @@ export default function AiTriage() {
                 )}
 
                 {/* History list preview */}
-                <div className="glass rounded-2xl p-6 border border-white/20">
-                  <h3 className="text-sm font-bold mb-4">Recent Diagnostic Scans</h3>
+                <div className="bg-zinc-950 border border-zinc-900 rounded-lg p-6 shadow-2xl">
+                  <h3 className="text-[10px] font-bold uppercase tracking-wider text-zinc-500 mb-4">Recent Diagnostic Scans</h3>
                   <div className="space-y-3">
                     {reportHistory.length === 0 ? (
-                      <p className="text-xs text-foreground/50 text-center py-4">No diagnostic history logged.</p>
+                      <p className="text-xs text-zinc-500 text-center py-6">No diagnostic history logged.</p>
                     ) : (
                       reportHistory.map((item) => (
-                        <div key={item.id} className="p-3 border border-border/40 rounded-xl bg-white/20 dark:bg-slate-800/20 text-xs flex justify-between items-center">
-                          <div>
-                            <div className="font-bold text-foreground truncate max-w-[250px]">{item.fileName}</div>
-                            <div className="text-[10px] text-foreground/50 mt-0.5">
-                              {new Date(item.timestamp).toLocaleDateString()} • Specialist: <span className="font-semibold text-foreground">{item.analysis?.recommendedSpecialist || "General"}</span>
+                        <div key={item.id} className="p-4 border border-zinc-900 rounded-lg bg-zinc-900/40 text-xs flex justify-between items-center gap-4 hover:border-zinc-800 transition-colors">
+                          <div className="min-w-0 flex-1">
+                            <div className="font-bold text-white truncate">{item.fileName}</div>
+                            <div className="text-[10px] text-zinc-550 mt-1">
+                              {new Date(item.timestamp).toLocaleDateString()} • Specialist: <span className="font-semibold text-zinc-450">{item.analysis?.recommendedSpecialist || "General"}</span>
                             </div>
                           </div>
                           <button
@@ -421,7 +428,7 @@ export default function AiTriage() {
                               recommendedSpecialist: item.analysis?.recommendedSpecialist,
                               extractedText: item.extractedText
                             })}
-                            className="px-2.5 py-1 border border-border bg-white dark:bg-slate-900 rounded font-bold text-[10px] hover:bg-black/5"
+                            className="px-3 py-1 border border-zinc-800 bg-zinc-950 hover:bg-zinc-850 hover:text-white text-zinc-300 rounded font-semibold text-[10px] cursor-pointer transition-colors"
                           >
                             View
                           </button>

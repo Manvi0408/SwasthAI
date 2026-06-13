@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useTheme } from "next-themes";
 import { 
   MapPin, Crosshair, Navigation2, Search, Filter, 
   Phone, Star, Droplet, Store, Compass, RefreshCw, ChevronRight
@@ -31,6 +32,7 @@ interface MapResource {
 
 export default function MapPage() {
   const { t } = useLanguage();
+  const { theme } = useTheme();
 
   const [mapLoaded, setMapLoaded] = useState(false);
   const [filterType, setFilterType] = useState<"all" | "hospital" | "blood" | "pharmacy">("all");
@@ -45,6 +47,7 @@ export default function MapPage() {
 
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<any>(null);
+  const tileLayerRef = useRef<any>(null);
   const markersGroupRef = useRef<any>(null);
   const routeLineRef = useRef<any>(null);
 
@@ -152,16 +155,34 @@ export default function MapPage() {
       zoomControl: false
     }).setView([28.6139, 77.2090], 11);
 
-    window.L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      maxZoom: 19,
-      attribution: '&copy; OpenStreetMap'
-    }).addTo(map);
-
     window.L.control.zoom({ position: "topright" }).addTo(map);
 
     mapRef.current = map;
     markersGroupRef.current = window.L.layerGroup().addTo(map);
   }, [mapLoaded]);
+
+  // 3. Manage Tile Layer dynamically based on theme
+  useEffect(() => {
+    if (!mapRef.current) return;
+
+    if (tileLayerRef.current) {
+      mapRef.current.removeLayer(tileLayerRef.current);
+    }
+
+    const tileUrl = theme === "dark"
+      ? "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+      : "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
+
+    const tileLayer = window.L.tileLayer(tileUrl, {
+      maxZoom: 19,
+      attribution: theme === "dark"
+        ? '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+        : '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    });
+
+    tileLayer.addTo(mapRef.current);
+    tileLayerRef.current = tileLayer;
+  }, [theme, mapLoaded]);
 
   // Acquire user GPS coordinates
   const handleGPSAcquisition = () => {
@@ -186,7 +207,7 @@ export default function MapPage() {
 
           // Add user current location blue marker circle
           const userIcon = window.L.divIcon({
-            html: `<div class="relative w-6 h-6 flex items-center justify-center bg-primary/20 border-2 border-primary rounded-full"><div class="w-2.5 h-2.5 bg-primary rounded-full animate-ping"></div></div>`,
+            html: `<div class="relative w-6 h-6 flex items-center justify-center bg-accent/20 border-2 border-accent rounded-full"><div class="w-2 h-2 bg-accent rounded-full animate-ping"></div></div>`,
             className: "custom-user-marker",
             iconSize: [24, 24],
             iconAnchor: [12, 12]
@@ -249,10 +270,10 @@ export default function MapPage() {
         ];
         
         routeLineRef.current = window.L.polyline(routePoints, {
-          color: "#3B82F6",
-          weight: 4,
+          color: "#2563eb",
+          weight: 3,
           opacity: 0.8,
-          dashArray: "6, 8"
+          dashArray: "4, 6"
         }).addTo(mapRef.current);
 
         mapRef.current.fitBounds(routeLineRef.current.getBounds(), { padding: [50, 50] });
@@ -263,31 +284,28 @@ export default function MapPage() {
 
     // Place remaining markers
     filtered.forEach(r => {
-      let iconColor = "#EF4444"; // default red
-      let iconHtml = `<div class="p-1.5 rounded-full bg-red-500 text-white border-2 border-white shadow-md"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg></div>`; // Hospital heart icon
+      let iconHtml = `<div class="p-1 rounded-full bg-red-655 text-white border-2 border-white shadow-sm flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg></div>`;
       
       if (r.type === "blood") {
-        iconColor = "#F59E0B";
-        iconHtml = `<div class="p-1.5 rounded-full bg-amber-500 text-white border-2 border-white shadow-md"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22a7 7 0 0 0 7-7c0-4.3-7-11-7-11S5 10.7 5 15a7 7 0 0 0 7 7Z"/></svg></div>`;
+        iconHtml = `<div class="p-1 rounded-full bg-amber-500 text-white border-2 border-white shadow-sm flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22a7 7 0 0 0 7-7c0-4.3-7-11-7-11S5 10.7 5 15a7 7 0 0 0 7 7Z"/></svg></div>`;
       } else if (r.type === "pharmacy") {
-        iconColor = "#10B981";
-        iconHtml = `<div class="p-1.5 rounded-full bg-emerald-500 text-white border-2 border-white shadow-md"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg></div>`;
+        iconHtml = `<div class="p-1 rounded-full bg-emerald-500 text-white border-2 border-white shadow-sm flex items-center justify-center"><svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg></div>`;
       }
 
       const customIcon = window.L.divIcon({
         html: iconHtml,
         className: "custom-leaflet-pin",
-        iconSize: [28, 28],
-        iconAnchor: [14, 28]
+        iconSize: [24, 24],
+        iconAnchor: [12, 24]
       });
 
       const marker = window.L.marker([r.lat, r.lng], { icon: customIcon })
         .bindPopup(`
-          <div class="p-1.5 text-xs text-slate-800">
-            <h4 class="font-extrabold text-sm mb-1">${r.name}</h4>
-            <p class="text-slate-500 leading-normal mb-1.5">${r.address}</p>
-            ${r.phone ? `<div class="flex items-center gap-1">📞 <b>${r.phone}</b></div>` : ''}
-            ${r.beds ? `<div class="mt-1 font-bold text-red-500">Beds: ${r.beds}</div>` : ''}
+          <div class="p-1 text-xs text-zinc-900 font-sans">
+            <h4 class="font-bold text-sm mb-1">${r.name}</h4>
+            <p class="text-zinc-500 leading-normal mb-1.5">${r.address}</p>
+            ${r.phone ? `<div class="flex items-center gap-1 font-semibold text-zinc-700">📞 <span>${r.phone}</span></div>` : ''}
+            ${r.beds ? `<div class="mt-1 font-bold text-red-655">Beds: ${r.beds}</div>` : ''}
           </div>
         `);
       
@@ -303,155 +321,156 @@ export default function MapPage() {
   };
 
   return (
-    <div className="w-full min-h-screen bg-background text-foreground flex flex-col">
+    <div className="w-full min-h-screen bg-background text-foreground flex flex-col font-sans grid-bg">
       <Navigation />
-
-      <div className="pt-24 pb-16 flex-grow flex flex-col h-[90vh]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex-grow flex flex-col w-full">
-          
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+      <div className="pt-28 pb-16 flex-grow flex flex-col lg:flex-row max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 gap-8">
+        
+        {/* Sidebar / Resource List */}
+        <div className="w-full lg:w-96 flex flex-col gap-6">
+          <div className="bg-card border border-border rounded-xl p-5 shadow-2xl space-y-4">
             <div>
-              <h1 className="text-3xl font-extrabold flex items-center gap-1.5 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                <Compass className="w-8 h-8 text-primary animate-pulse" />
-                Interactive Healthcare Map
+              <h1 className="text-xl font-extrabold text-foreground flex items-center gap-2">
+                <Compass className="w-5 h-5 text-accent animate-pulse" />
+                Resource Proximity Map
               </h1>
-              <p className="text-xs text-foreground/50">
-                Live geolocation tracking & proximity routing index maps.
+              <p className="text-[11px] text-muted-foreground mt-1 leading-relaxed">
+                Locate critical care beds, blood banks, and subsidized pharmacies. Sync your GPS coordinates to calculate routing distances automatically.
               </p>
             </div>
 
-            <div className="flex flex-wrap gap-2 text-xs">
-              <button
-                onClick={handleGPSAcquisition}
-                disabled={tracking}
-                className="px-4 py-2 bg-primary/10 border border-primary/20 text-primary rounded-xl font-bold flex items-center gap-1.5 hover:bg-primary/20 transition-all cursor-pointer"
-              >
-                <Crosshair className={`w-3.5 h-3.5 ${tracking ? "animate-spin" : ""}`} />
-                {userLat ? "GPS Acquired" : "Acquire Current GPS"}
-              </button>
+            {/* GPS Trigger Button */}
+            <button
+              onClick={handleGPSAcquisition}
+              disabled={tracking}
+              className="w-full py-2.5 rounded-lg bg-muted hover:bg-muted/85 text-muted-foreground hover:text-foreground font-bold text-xs flex items-center justify-center gap-2 border border-border transition-all cursor-pointer shadow-sm"
+            >
+              {tracking ? (
+                <>
+                  <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                  Acquiring Coordinates...
+                </>
+              ) : (
+                <>
+                  <Crosshair className="w-3.5 h-3.5" />
+                  {userLat ? "GPS Coordinates Synced" : "Share GPS Location"}
+                </>
+              )}
+            </button>
+
+            {/* Search inputs */}
+            <div className="flex items-center space-x-2 bg-muted border border-border rounded-lg px-3 py-2">
+              <Search className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+              <input
+                type="text"
+                placeholder="Search resources..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="bg-transparent text-foreground placeholder-muted-foreground outline-none text-xs w-full"
+              />
+            </div>
+
+            {/* Filter selector */}
+            <div className="grid grid-cols-2 gap-1.5 text-[10px] font-bold">
+              {[
+                { id: "all", label: "All Items" },
+                { id: "hospital", label: "Hospitals" },
+                { id: "blood", label: "Blood Banks" },
+                { id: "pharmacy", label: "Pharmacies" }
+              ].map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setFilterType(tab.id as any)}
+                  className={`py-1.5 rounded-md border transition-all cursor-pointer ${
+                    filterType === tab.id
+                      ? "bg-foreground border-foreground text-background shadow"
+                      : "bg-muted border-border text-muted-foreground hover:text-foreground hover:bg-muted/80"
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
             </div>
           </div>
 
-          <div className="flex-grow grid grid-cols-1 lg:grid-cols-12 gap-6 h-[70vh]">
-            
-            {/* Map Frame Container */}
-            <div className="lg:col-span-8 rounded-3xl overflow-hidden border border-border shadow-lg relative h-[400px] lg:h-full">
-              {!mapLoaded ? (
-                <div className="absolute inset-0 bg-slate-900 flex flex-col items-center justify-center text-white text-xs gap-3">
-                  <RefreshCw className="w-8 h-8 animate-spin text-primary" />
-                  Loading Interactive Map Components...
-                </div>
-              ) : (
-                <div ref={mapContainerRef} className="w-full h-full z-10" />
-              )}
-
-              {/* Floating Map Panel controls */}
-              <div className="absolute top-4 left-4 z-20 flex gap-2">
-                <select 
-                  value={filterType}
-                  onChange={(e: any) => setFilterType(e.target.value)}
-                  className="bg-white/95 dark:bg-slate-900/95 border border-border text-xs rounded-lg px-3 py-1.5 font-bold outline-none shadow-md"
+          {/* Nearest item details card */}
+          {nearestResource && (
+            <div className="bg-card border border-border rounded-xl p-5 shadow-2xl space-y-3 relative overflow-hidden">
+              <div className="absolute top-0 right-0 bg-accent/20 text-accent text-[8px] font-extrabold uppercase px-2 py-0.5 rounded-bl border-l border-b border-accent/30 animate-pulse">
+                Nearest Match
+              </div>
+              <div className="text-[10px] text-accent font-bold uppercase tracking-wider flex items-center gap-1">
+                <Navigation2 className="w-3 h-3 rotate-45" />
+                Distance: {nearestResource.distance?.toFixed(2)} km away
+              </div>
+              <div>
+                <h3 className="text-sm font-bold text-foreground leading-tight">{nearestResource.name}</h3>
+                <p className="text-[11px] text-muted-foreground leading-normal mt-1">{nearestResource.address}</p>
+              </div>
+              <div className="flex gap-2 pt-2 text-[10px]">
+                <button
+                  onClick={() => focusResource(nearestResource)}
+                  className="px-2.5 py-1.5 bg-muted hover:bg-muted/80 border border-border text-muted-foreground hover:text-foreground rounded font-semibold transition-colors cursor-pointer"
                 >
-                  <option value="all">All Registries</option>
-                  <option value="hospital">Hospitals</option>
-                  <option value="blood">Blood Banks</option>
-                  <option value="pharmacy">Pharmacies</option>
-                </select>
-              </div>
-
-              {/* Floating Nearest Card display */}
-              <AnimatePresence>
-                {nearestResource && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 15 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 15 }}
-                    className="absolute bottom-4 left-4 right-4 sm:left-4 sm:right-auto z-20 max-w-sm w-full bg-white/95 dark:bg-slate-900/95 backdrop-blur border border-primary/30 p-4 rounded-2xl shadow-xl flex gap-3"
+                  Locate
+                </button>
+                {nearestResource.phone && (
+                  <a
+                    href={`tel:${nearestResource.phone}`}
+                    className="px-2.5 py-1.5 bg-muted hover:bg-muted/80 border border-border text-muted-foreground hover:text-foreground rounded font-semibold transition-colors flex items-center gap-1"
                   >
-                    <div className="p-2 rounded-xl bg-primary/10 text-primary self-start mt-1">
-                      <Navigation2 className="w-5 h-5 text-primary rotate-45" />
-                    </div>
-                    <div className="flex-1 text-xs">
-                      <div className="text-[9px] font-black uppercase text-primary tracking-wider">Closest Emergency Target</div>
-                      <h4 className="font-extrabold text-sm text-foreground mt-0.5">{nearestResource.name}</h4>
-                      <p className="text-[10px] text-foreground/60 truncate mt-0.5">{nearestResource.address}</p>
-                      
-                      <div className="mt-2.5 flex items-center justify-between">
-                        <span className="font-black text-blue-500 bg-blue-500/10 px-2 py-0.5 rounded text-[10px]">
-                          Proximity: {nearestResource.distance?.toFixed(1)} km
-                        </span>
-                        <span className="text-[10px] text-foreground/50">
-                          Est. Time: ~{Math.round((nearestResource.distance || 0) * 2.5)} mins
-                        </span>
-                      </div>
-                    </div>
-                  </motion.div>
+                    📞 Call
+                  </a>
                 )}
-              </AnimatePresence>
-            </div>
-
-            {/* Side list finder */}
-            <div className="lg:col-span-4 flex flex-col gap-4 h-[400px] lg:h-full">
-              
-              {/* Search text field */}
-              <div className="bg-white/40 dark:bg-slate-800/40 border border-border/80 px-4 py-3 rounded-2xl flex items-center gap-2">
-                <Search className="w-4 h-4 text-primary" />
-                <input
-                  type="text"
-                  placeholder="Filter by facility name or region..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="flex-grow bg-transparent text-xs font-semibold outline-none text-foreground placeholder-foreground/45"
-                />
               </div>
+            </div>
+          )}
 
-              {/* Resource grid list */}
-              <div className="flex-grow overflow-y-auto border border-border/60 rounded-3xl p-3 bg-black/5 dark:bg-white/5 space-y-2.5 max-h-[300px] lg:max-h-none">
-                {resources
-                  .filter(r => {
-                    const matchF = filterType === "all" || r.type === filterType;
-                    const matchQ = !searchQuery || r.name.toLowerCase().includes(searchQuery.toLowerCase()) || r.address.toLowerCase().includes(searchQuery.toLowerCase());
-                    return matchF && matchQ;
-                  })
-                  .slice(0, 15)
-                  .map((item) => (
-                    <div 
-                      key={item.id}
-                      onClick={() => focusResource(item)}
-                      className="p-3 bg-white dark:bg-slate-900 rounded-xl border border-border/40 hover:border-primary/50 transition-all flex justify-between items-center cursor-pointer group hover:shadow-sm"
+          {/* List display */}
+          <div className="bg-card border border-border rounded-xl p-5 shadow-2xl flex-grow overflow-hidden flex flex-col max-h-[350px] lg:max-h-none">
+            <h3 className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-3 block">Matches</h3>
+            
+            <div className="flex-grow overflow-y-auto space-y-2.5 pr-1 text-xs">
+              {resources.length === 0 ? (
+                <p className="text-muted-foreground text-center py-6 font-medium">Loading database resources...</p>
+              ) : (
+                resources
+                  .filter(r => filterType === "all" || r.type === filterType)
+                  .filter(r => searchQuery === "" || r.name.toLowerCase().includes(searchQuery.toLowerCase()) || r.address.toLowerCase().includes(searchQuery.toLowerCase()))
+                  .map((res) => (
+                    <div
+                      key={res.id}
+                      onClick={() => focusResource(res)}
+                      className="p-3 border border-border rounded-lg bg-card hover:bg-muted/50 hover:border-muted-foreground/30 transition-colors flex items-start gap-2.5 cursor-pointer group"
                     >
-                      <div className="text-xs">
-                        <div className="flex items-center gap-1.5">
-                          <h4 className="font-extrabold text-foreground group-hover:text-primary transition-colors">{item.name}</h4>
-                          <span className={`text-[8px] font-black uppercase px-1.5 py-0.5 rounded ${
-                            item.type === "hospital" ? "bg-red-500/10 text-red-500" :
-                            item.type === "blood" ? "bg-amber-500/10 text-amber-500" :
-                            "bg-emerald-500/10 text-emerald-500"
-                          }`}>
-                            {item.type}
-                          </span>
-                        </div>
-                        <p className="text-[10px] text-foreground/50 truncate max-w-[200px] mt-0.5">{item.address}</p>
-                      </div>
-                      
-                      <div className="text-right text-[10px] text-foreground/50 font-bold">
-                        {item.distance !== undefined ? (
-                          <span className="text-primary font-bold">{item.distance.toFixed(1)} km</span>
-                        ) : (
-                          <ChevronRight className="w-4 h-4 text-foreground/30 group-hover:text-primary transition-colors" />
+                      <MapPin className={`w-4 h-4 flex-shrink-0 mt-0.5 ${res.type === "hospital" ? "text-red-500" : res.type === "blood" ? "text-amber-500" : "text-emerald-500"}`} />
+                      <div className="min-w-0 flex-1">
+                        <div className="font-bold text-foreground group-hover:text-accent transition-colors truncate">{res.name}</div>
+                        <div className="text-[10px] text-muted-foreground truncate mt-0.5">{res.address}</div>
+                        {res.distance && (
+                          <div className="text-[9px] text-muted-foreground mt-1 font-semibold">📍 {res.distance.toFixed(1)} km away</div>
                         )}
                       </div>
+                      <ChevronRight className="w-3.5 h-3.5 text-muted-foreground self-center opacity-0 group-hover:opacity-100 transition-opacity" />
                     </div>
-                  ))}
-              </div>
-
+                  ))
+              )}
             </div>
-
           </div>
-
         </div>
-      </div>
 
+        {/* Map Container View */}
+        <div className="flex-grow min-h-[400px] lg:min-h-0 bg-card border border-border rounded-xl overflow-hidden shadow-2xl relative">
+          <div ref={mapContainerRef} className="w-full h-full z-10 relative bg-card" />
+          
+          {!mapLoaded && (
+            <div className="absolute inset-0 bg-card flex flex-col items-center justify-center text-xs text-muted-foreground gap-2 z-20">
+              <RefreshCw className="w-6 h-6 animate-spin text-accent" />
+              <span>Initializing Interactive Leaflet Engine...</span>
+            </div>
+          )}
+        </div>
+
+      </div>
       <Footer />
     </div>
   );
