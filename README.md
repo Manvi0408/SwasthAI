@@ -78,7 +78,6 @@ Dynamic charts (using Recharts) representing state-wise beds and blood inventori
 * **Frontend**: React 18, React Router 6 (SPA mode), TypeScript, TailwindCSS 3, Lucide React icons, Framer Motion (premium animations), React Three Fiber (3D engine).
 * **Backend**: Express.js server, Node.js.
 * **ORM & Database**: Prisma v6 client, PostgreSQL (Supabase backend session port 5432).
-* **Internationalization**: Localized context dictionary supporting **10 Indian languages** (English, हिन्दी, தமிழ், తెలుగు, বাংলা, मराठी, ગુજરાતી, ਕੰਨੜ, മലയാളം, ਪੰਜਾਬੀ).
 * **Styling**: Curated HSL color palette, customized dark/light theme options, and premium glassmorphism layouts.
 
 ---
