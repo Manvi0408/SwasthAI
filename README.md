@@ -10,7 +10,7 @@ SwasthAI is a production-ready, full-stack premium healthcare platform designed 
 ![Main Homepage & 3D Showcase](docs/screenshots/1_dashboard_main.png)
 
 ### 2. Proximity-Sorted Hospital Bed Finder
-![Hospital Bed Finder]<img width="1920" height="878" alt="latest_hospital_beds_1781313035490" src="https://github.com/user-attachments/assets/e29c3b7d-86bd-4eaf-bceb-89b530f281f7" />
+<img width="1920" height="878" alt="latest_hospital_beds_1781313035490" src="https://github.com/user-attachments/assets/e29c3b7d-86bd-4eaf-bceb-89b530f281f7" />
 
 
 ### 3. Interactive Proximity GIS Map
