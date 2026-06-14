@@ -24,7 +24,7 @@ import MapPage from "./pages/MapPage";
 const queryClient = new QueryClient();
 
 const App = () => (
-  <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+  <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
     <LanguageProvider>
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>

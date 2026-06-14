@@ -109,9 +109,9 @@ export default function InjuryDetection() {
 
   const getSeverityBadgeClass = (sev: string) => {
     switch (sev.toLowerCase()) {
-      case "high": return "border-red-900/60 bg-red-950/30 text-red-400";
-      case "medium": return "border-amber-900/60 bg-amber-950/30 text-amber-400";
-      default: return "border-green-900/60 bg-green-950/30 text-green-400";
+      case "high": return "border-red-200 dark:border-red-900/60 bg-red-50 dark:bg-red-950/30 text-red-600 dark:text-red-400";
+      case "medium": return "border-amber-200 dark:border-amber-900/60 bg-amber-50 dark:bg-amber-950/30 text-amber-600 dark:text-amber-400";
+      default: return "border-green-200 dark:border-green-900/60 bg-green-50 dark:bg-green-950/30 text-green-600 dark:text-green-400";
     }
   };
 
@@ -130,10 +130,10 @@ export default function InjuryDetection() {
   ] : [];
 
   return (
-    <div className="w-full min-h-screen bg-black text-zinc-100 flex flex-col font-sans grid-bg">
+    <div className="w-full min-h-screen bg-background text-foreground flex flex-col font-sans grid-bg">
       <Navigation />
 
-      <div className="pt-32 pb-24 flex-grow bg-black/60">
+      <div className="pt-32 pb-24 flex-grow bg-background/60">
         <div className="max-w-6xl mx-auto px-6 sm:px-8">
           
           {/* Header */}
@@ -146,10 +146,10 @@ export default function InjuryDetection() {
             <span className="text-xs font-semibold tracking-wider text-red-500 uppercase mb-3 block">
               AI Vision Assistant
             </span>
-            <h1 className="text-4xl font-extrabold tracking-tight text-white mb-4">
+            <h1 className="text-4xl font-extrabold tracking-tight text-foreground mb-4">
               AI Injury Detector
             </h1>
-            <p className="text-xs text-zinc-400 max-w-xl mx-auto leading-relaxed">
+            <p className="text-xs text-muted-foreground max-w-xl mx-auto leading-relaxed">
               Scan wound photos to detect burns, cuts, fractures, skin infections, bruises, and swelling.
             </p>
           </motion.div>
@@ -165,20 +165,20 @@ export default function InjuryDetection() {
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -8 }}
-                    className="bg-zinc-950 border border-zinc-900 rounded-lg p-6 shadow-2xl"
+                    className="bg-card border border-border rounded-lg p-6 shadow-2xl"
                   >
                     <form onSubmit={handleDetect} className="space-y-6">
                       
                       {/* Image Dropzone panel */}
                       <div className="space-y-2">
-                        <span className="block text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2">Capture or Upload Wound Image</span>
-                        <div className="border border-dashed border-zinc-800 rounded-lg p-6 flex flex-col items-center justify-center bg-zinc-900/40 hover:bg-zinc-900/60 hover:border-zinc-700 transition-all cursor-pointer relative min-h-[220px]">
+                        <span className="block text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Capture or Upload Wound Image</span>
+                        <div className="border border-dashed border-border rounded-lg p-6 flex flex-col items-center justify-center bg-muted/40 hover:bg-muted/60 hover:border-border/80 transition-all cursor-pointer relative min-h-[220px]">
                           {image ? (
                             <div className="w-full flex flex-col items-center gap-4 py-2">
                               <img 
                                 src={image} 
                                 alt="Injury Preview" 
-                                className="max-h-[180px] rounded border border-zinc-850 shadow-sm object-cover"
+                                className="max-h-[180px] rounded border border-border shadow-sm object-cover"
                               />
                               <button
                                 type="button"
@@ -190,11 +190,11 @@ export default function InjuryDetection() {
                             </div>
                           ) : (
                             <div className="text-center space-y-2 py-4">
-                              <Upload className="w-8 h-8 text-zinc-500 mx-auto" />
-                              <div className="text-xs font-semibold text-zinc-400">
+                              <Upload className="w-8 h-8 text-muted-foreground" />
+                              <div className="text-xs font-semibold text-muted-foreground">
                                 Drag & drop or click to upload photo
                               </div>
-                              <div className="text-[10px] text-zinc-500">
+                              <div className="text-[10px] text-muted-foreground font-semibold">
                                 Supports PNG, JPG, JPEG (Max 5MB)
                               </div>
                               <input 
@@ -211,22 +211,22 @@ export default function InjuryDetection() {
                       {/* suspected selector */}
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-2">Suspected Wound Type</label>
+                          <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Suspected Wound Type</label>
                           <select 
                             value={suspectedType} 
                             onChange={(e) => setSuspectedType(e.target.value)}
-                            className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-2.5 outline-none text-xs font-semibold text-white transition-all focus:border-zinc-700"
+                            className="w-full bg-muted border border-border rounded-lg px-4 py-2.5 outline-none text-xs font-semibold text-foreground transition-all focus:border-border/80 focus:ring-1 focus:ring-ring"
                           >
-                            <option value="burns">Thermal Burn</option>
-                            <option value="cuts">Cut / Laceration</option>
-                            <option value="fractures">Fracture / Broken Bone</option>
-                            <option value="infections">Skin Infection</option>
-                            <option value="bruises">Bruise / Contusion</option>
-                            <option value="swelling">Swelling / Sprain</option>
+                            <option value="burns" className="bg-card text-foreground">Thermal Burn</option>
+                            <option value="cuts" className="bg-card text-foreground">Cut / Laceration</option>
+                            <option value="fractures" className="bg-card text-foreground">Fracture / Broken Bone</option>
+                            <option value="infections" className="bg-card text-foreground">Skin Infection</option>
+                            <option value="bruises" className="bg-card text-foreground">Bruise / Contusion</option>
+                            <option value="swelling" className="bg-card text-foreground">Swelling / Sprain</option>
                           </select>
                         </div>
 
-                        <div className="text-xs text-zinc-400 font-medium flex items-start bg-zinc-900/60 p-4 rounded-lg border border-zinc-800">
+                        <div className="text-xs text-muted-foreground font-medium flex items-start bg-muted/40 p-4 rounded-lg border border-border">
                           <Info className="w-4 h-4 text-accent mr-2 mt-0.5 flex-shrink-0" />
                           Identifying suspected areas optimizes image classification diagnostics.
                         </div>
@@ -261,11 +261,11 @@ export default function InjuryDetection() {
                     className="space-y-6"
                   >
                     {/* Score summary panel */}
-                    <div className="bg-zinc-950 border border-zinc-900 rounded-lg p-6 shadow-2xl relative overflow-hidden">
-                      <div className="flex flex-col sm:flex-row justify-between items-start gap-4 pb-6 border-b border-zinc-900">
+                    <div className="bg-card border border-border rounded-lg p-6 shadow-2xl relative overflow-hidden">
+                      <div className="flex flex-col sm:flex-row justify-between items-start gap-4 pb-6 border-b border-border">
                         <div>
                           <span className="text-[10px] font-bold uppercase tracking-wider text-red-500">Scan Diagnosis</span>
-                          <h2 className="text-xl font-extrabold text-white mt-1">
+                          <h2 className="text-xl font-extrabold text-foreground mt-1">
                             {result.injuryType}
                           </h2>
                           <div className={`mt-2.5 inline-flex items-center gap-1.5 px-3 py-1 rounded border text-xs font-semibold ${getSeverityBadgeClass(result.severity)}`}>
@@ -276,8 +276,8 @@ export default function InjuryDetection() {
 
                         <div className="text-left sm:text-right">
                           <div className="text-2xl font-black text-red-500">{result.confidence}%</div>
-                          <div className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider">Analysis Confidence</div>
-                          <div className="text-xs text-red-400 font-bold bg-red-950/30 border border-red-905 px-2 py-0.5 rounded mt-2 inline-block">
+                          <div className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider">Analysis Confidence</div>
+                          <div className="text-xs text-red-600 dark:text-red-400 font-bold bg-red-500/10 dark:bg-red-950/30 border border-red-500/20 dark:border-red-900/60 px-2 py-0.5 rounded mt-2 inline-block">
                             {result.emergencyLevel}
                           </div>
                         </div>
@@ -287,9 +287,9 @@ export default function InjuryDetection() {
                       <div className="h-[240px] w-full mt-6 flex justify-center">
                         <ResponsiveContainer width="100%" height="100%">
                           <RadarChart cx="50%" cy="50%" outerRadius="75%" data={radarData}>
-                            <PolarGrid stroke="#27272a" />
-                            <PolarAngleAxis dataKey="subject" tick={{ fontSize: 9, fill: '#a1a1aa', fontWeight: 'bold' }} />
-                            <PolarRadiusAxis angle={30} domain={[0, 100]} tick={{ fontSize: 8, fill: '#71717a' }} />
+                            <PolarGrid stroke="var(--border)" />
+                            <PolarAngleAxis dataKey="subject" tick={{ fontSize: 9, fill: 'var(--muted-foreground)', fontWeight: 'bold' }} />
+                            <PolarRadiusAxis angle={30} domain={[0, 100]} tick={{ fontSize: 8, fill: 'var(--muted-foreground)' }} />
                             <Radar name="Injury Index" dataKey="A" stroke="#dc2626" fill="#ef4444" fillOpacity={0.2} />
                           </RadarChart>
                         </ResponsiveContainer>
@@ -297,15 +297,15 @@ export default function InjuryDetection() {
                     </div>
 
                     {/* Recommendations check-list */}
-                    <div className="bg-zinc-950 border border-zinc-900 rounded-lg p-6 shadow-2xl space-y-4">
+                    <div className="bg-card border border-border rounded-lg p-6 shadow-2xl space-y-4">
                       <h3 className="text-xs font-bold uppercase tracking-wider text-red-500 flex items-center gap-1.5">
                         <CheckCircle className="w-4 h-4 text-red-550" />
                         First-Aid Procedures (Step-by-Step)
                       </h3>
-                      <ul className="text-xs space-y-3 font-medium text-zinc-300 leading-relaxed">
+                      <ul className="text-xs space-y-3 font-medium text-muted-foreground leading-relaxed">
                         {result.recommendations.map((rec, i) => (
                           <li key={i} className="flex items-start gap-3">
-                            <span className="w-5 h-5 rounded bg-zinc-900 text-zinc-300 border border-zinc-800 font-bold flex items-center justify-center flex-shrink-0 text-[10px] mt-0.5">
+                            <span className="w-5 h-5 rounded bg-muted text-foreground border border-border font-bold flex items-center justify-center flex-shrink-0 text-[10px] mt-0.5">
                               {i + 1}
                             </span>
                             <span className="leading-relaxed mt-0.5">{rec}</span>
@@ -317,7 +317,7 @@ export default function InjuryDetection() {
                     <div className="flex gap-3">
                       <button
                         onClick={cleanAnalyzeReset}
-                        className="px-4 py-2 border border-zinc-800 bg-zinc-900 hover:bg-zinc-850 rounded-lg font-semibold text-xs text-zinc-305 flex items-center gap-1.5 transition-colors duration-200 cursor-pointer"
+                        className="px-4 py-2 border border-border bg-card hover:bg-muted rounded-lg font-semibold text-xs text-foreground flex items-center gap-1.5 transition-colors duration-200 cursor-pointer"
                       >
                         <RefreshCw className="w-3.5 h-3.5" />
                         Analyze Another Photo
@@ -334,15 +334,15 @@ export default function InjuryDetection() {
             <div className="lg:col-span-5 space-y-6">
               
               {/* Emergency Alert Guidance */}
-              <div className="bg-zinc-950 border border-zinc-900 rounded-lg p-6 shadow-2xl text-xs leading-relaxed space-y-4">
+              <div className="bg-card border border-border rounded-lg p-6 shadow-2xl text-xs leading-relaxed space-y-4">
                 <h3 className="text-xs font-bold uppercase tracking-wider text-red-500 flex items-center gap-1.5">
                   <ShieldAlert className="w-4 h-4 text-red-550" />
                   Clinical Emergency Directives
                 </h3>
-                <p className="text-zinc-400">
+                <p className="text-muted-foreground">
                   If the injury exhibits any of the following symptoms, bypass self-first-aid and proceed directly to the nearest hospital:
                 </p>
-                <ul className="list-disc pl-4 space-y-2 text-zinc-500 font-medium">
+                <ul className="list-disc pl-4 space-y-2 text-muted-foreground font-medium">
                   <li>Uncontrolled bleeding that does not stop after 10 minutes of direct pressure.</li>
                   <li>Bone visibility through cuts, or obvious structural limb deformation.</li>
                   <li>Severe burns covering areas larger than the patient's palm, or face/joint regions.</li>
@@ -351,25 +351,25 @@ export default function InjuryDetection() {
               </div>
 
               {/* History list preview */}
-              <div className="bg-zinc-950 border border-zinc-900 rounded-lg p-6 shadow-2xl">
-                <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-500 mb-4">Recent Scan History</h3>
+              <div className="bg-card border border-border rounded-lg p-6 shadow-2xl">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-4">Recent Scan History</h3>
 
                 <div className="space-y-3 max-h-[320px] overflow-y-auto pr-1">
                   {history.length === 0 ? (
-                    <p className="text-xs text-zinc-500 text-center py-6">No previous scans found.</p>
+                    <p className="text-xs text-muted-foreground text-center py-6">No previous scans found.</p>
                   ) : (
                     history.map((item) => (
-                      <div key={item.id} className="p-4 border border-zinc-900 rounded-lg bg-zinc-900/40 text-xs flex justify-between items-center gap-4 hover:border-zinc-800 transition-colors">
+                      <div key={item.id} className="p-4 border border-border rounded-lg bg-muted/40 text-xs flex justify-between items-center gap-4 hover:border-border transition-colors">
                         <div className="min-w-0 flex-1">
-                          <div className="font-bold text-white truncate">{item.injuryType}</div>
-                          <div className="text-[10px] text-zinc-500 mt-1 flex items-center gap-1.5 flex-wrap">
-                            <span>Severity: <span className="font-bold text-zinc-405">{item.severity}</span></span>
+                          <div className="font-bold text-foreground truncate">{item.injuryType}</div>
+                          <div className="text-[10px] text-muted-foreground mt-1 flex items-center gap-1.5 flex-wrap">
+                            <span>Severity: <span className="font-bold text-foreground">{item.severity}</span></span>
                             <span>•</span>
                             <span>{new Date(item.timestamp).toLocaleDateString()}</span>
                           </div>
                         </div>
                         <div className="flex-shrink-0">
-                          <span className="text-[10px] font-bold text-red-400 px-2 py-0.5 rounded bg-red-950/30 border border-red-900/60">
+                          <span className="text-[10px] font-bold text-red-655 px-2 py-0.5 rounded bg-red-500/10 border border-red-500/20 dark:text-red-400 dark:bg-red-950/30 dark:border-red-900/60">
                             {item.confidence}% Match
                           </span>
                         </div>

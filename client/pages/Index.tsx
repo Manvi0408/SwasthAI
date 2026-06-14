@@ -860,14 +860,14 @@ export default function Index() {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 15 }}
-            className="py-16 bg-zinc-950 border-b border-zinc-900 scroll-mt-20 flex-grow"
+            className="py-16 bg-card border-b border-border scroll-mt-20 flex-grow"
           >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-900 pb-6 mb-8">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border pb-6 mb-8">
                 <div>
-                  <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-white">Registry Search Results</h2>
-                  <p className="text-xs text-zinc-450">Matches for: <span className="font-semibold text-zinc-200">"{query}"</span></p>
+                  <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">Registry Search Results</h2>
+                  <p className="text-xs text-muted-foreground">Matches for: <span className="font-semibold text-foreground">"{query}"</span></p>
                 </div>
                 
                 <div className="flex gap-1 overflow-x-auto pb-1">
@@ -883,8 +883,8 @@ export default function Index() {
                       onClick={() => setSelectedResultTab(tab.id as any)}
                       className={`px-3 py-1.5 rounded-lg text-xs font-semibold border whitespace-nowrap transition-all cursor-pointer ${
                         selectedResultTab === tab.id
-                          ? "bg-white text-black border-white shadow-sm"
-                          : "bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-white"
+                          ? "bg-foreground text-background border-foreground shadow-sm"
+                          : "bg-muted border-border text-muted-foreground hover:text-foreground"
                       }`}
                     >
                       {tab.label}
@@ -894,8 +894,8 @@ export default function Index() {
               </div>
 
               {!hasResults ? (
-                <div className="text-center py-16 bg-zinc-900 border border-zinc-800 rounded-xl">
-                  <p className="text-sm text-zinc-400 font-semibold">No exact matches found. Try searching simple terms like "cardiac", "O+", or "Crocin".</p>
+                <div className="text-center py-16 bg-muted/50 border border-border rounded-xl">
+                  <p className="text-sm text-muted-foreground font-semibold">No exact matches found. Try searching simple terms like "cardiac", "O+", or "Crocin".</p>
                 </div>
               ) : (
                 <div className="space-y-6">
@@ -904,14 +904,14 @@ export default function Index() {
                     <motion.div 
                       initial={{ scale: 0.98, opacity: 0 }}
                       animate={{ scale: 1, opacity: 1 }}
-                      className="p-5 bg-red-950/20 border border-red-900/60 rounded-xl flex flex-col md:flex-row gap-6 justify-between items-start"
+                      className="p-5 bg-red-500/10 border border-red-500/20 dark:bg-red-950/20 dark:border-red-900/60 rounded-xl flex flex-col md:flex-row gap-6 justify-between items-start"
                     >
                       <div className="space-y-1.5">
-                        <div className="flex items-center gap-2 text-red-400 font-bold text-sm">
+                        <div className="flex items-center gap-2 text-red-650 dark:text-red-400 font-bold text-sm">
                           <ShieldAlert className="w-5 h-5 animate-pulse text-red-500" />
                           CRITICAL: {results.emergency.category} Instructions
                         </div>
-                        <p className="text-sm font-semibold text-zinc-300 leading-relaxed">
+                        <p className="text-sm font-semibold text-foreground leading-relaxed">
                           {results.emergency.instructions}
                         </p>
                       </div>
@@ -919,7 +919,7 @@ export default function Index() {
                       <div className="flex flex-col gap-2 w-full md:w-auto">
                         <a 
                           href={`tel:${results.emergency.dispatch.split(" ")[0]}`}
-                          className="px-5 py-2.5 bg-red-600 hover:bg-red-500 text-white font-bold text-center rounded-lg shadow-sm text-xs flex items-center justify-center gap-1.5"
+                          className="px-5 py-2.5 bg-red-650 hover:bg-red-500 text-white font-bold text-center rounded-lg shadow-sm text-xs flex items-center justify-center gap-1.5"
                         >
                           <Phone className="w-4 h-4" />
                           Call {results.emergency.dispatch}
@@ -930,24 +930,24 @@ export default function Index() {
 
                   {/* Symptom triage advice */}
                   {results.triage && (selectedResultTab === "all" || selectedResultTab === "triage") && (
-                    <div className="bg-zinc-900 rounded-xl p-5 border border-zinc-800">
-                      <h3 className="text-sm font-bold mb-4 border-b border-zinc-800 pb-2.5 flex items-center gap-2 text-white">
-                        <Stethoscope className="w-4 h-4 text-zinc-400" />
+                    <div className="bg-muted/30 rounded-xl p-5 border border-border">
+                      <h3 className="text-sm font-bold mb-4 border-b border-border pb-2.5 flex items-center gap-2 text-foreground">
+                        <Stethoscope className="w-4 h-4 text-muted-foreground" />
                         AI Symptoms Assessment
                       </h3>
                       
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                        <div className="p-3.5 rounded-lg border border-amber-950 bg-amber-950/20 text-center flex flex-col justify-center">
-                          <span className="text-[9px] font-bold uppercase text-amber-500 mb-0.5">Assessment Severity</span>
-                          <span className="text-base font-extrabold text-amber-400">{results.triage.severity}</span>
+                        <div className="p-3.5 rounded-lg border border-amber-500/20 bg-amber-500/10 dark:border-amber-900/60 dark:bg-amber-950/20 text-center flex flex-col justify-center">
+                          <span className="text-[9px] font-bold uppercase text-amber-600 dark:text-amber-500 mb-0.5">Assessment Severity</span>
+                          <span className="text-base font-extrabold text-amber-700 dark:text-amber-400">{results.triage.severity}</span>
                         </div>
-                        <div className="md:col-span-2 p-3.5 rounded-lg border border-zinc-800 bg-zinc-950">
-                          <span className="text-[9px] font-bold uppercase text-zinc-500 block mb-0.5">Suspected Conditions</span>
-                          <span className="font-bold text-zinc-200 text-sm">{results.triage.condition}</span>
+                        <div className="md:col-span-2 p-3.5 rounded-lg border border-border bg-card">
+                          <span className="text-[9px] font-bold uppercase text-muted-foreground block mb-0.5">Suspected Conditions</span>
+                          <span className="font-bold text-foreground text-sm">{results.triage.condition}</span>
                         </div>
                       </div>
 
-                      <div className="p-3 bg-zinc-950 border border-zinc-800 rounded-lg text-xs font-semibold text-zinc-400">
+                      <div className="p-3 bg-card border border-border rounded-lg text-xs font-semibold text-muted-foreground">
                         {results.triage.action}
                       </div>
                     </div>
@@ -956,28 +956,28 @@ export default function Index() {
                   {/* Hospitals list */}
                   {results.hospitals.length > 0 && (selectedResultTab === "all" || selectedResultTab === "hospitals") && (
                     <div className="space-y-3">
-                      <h3 className="text-sm font-bold flex items-center gap-2 text-zinc-300">
-                        <MapPin className="w-4 h-4 text-zinc-550" />
+                      <h3 className="text-sm font-bold flex items-center gap-2 text-foreground">
+                        <MapPin className="w-4 h-4 text-muted-foreground" />
                         Beds & Emergency Care ({results.hospitals.length})
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {results.hospitals.slice(0, 4).map((hosp) => (
-                          <div key={hosp.id} className="bg-zinc-900 rounded-xl p-5 border border-zinc-800 flex flex-col justify-between hover:shadow-sm transition-shadow">
+                          <div key={hosp.id} className="bg-card rounded-xl p-5 border border-border flex flex-col justify-between hover:shadow-sm transition-shadow">
                             <div>
                               <div className="flex justify-between items-start mb-1.5">
-                                <h4 className="text-sm font-bold text-white">{hosp.name}</h4>
-                                <span className="text-[9px] font-bold px-1.5 py-0.5 bg-zinc-950 text-zinc-400 border border-zinc-800 rounded">{hosp.type}</span>
+                                <h4 className="text-sm font-bold text-foreground">{hosp.name}</h4>
+                                <span className="text-[9px] font-bold px-1.5 py-0.5 bg-muted text-muted-foreground border border-border rounded">{hosp.type}</span>
                               </div>
-                              <p className="text-xs text-zinc-550 flex items-center gap-1.5 mb-4">
-                                <MapPin className="w-3.5 h-3.5 flex-shrink-0 text-zinc-600" />
+                              <p className="text-xs text-muted-foreground flex items-center gap-1.5 mb-4">
+                                <MapPin className="w-3.5 h-3.5 flex-shrink-0 text-muted-foreground" />
                                 {hosp.address}
                               </p>
                             </div>
-                            <div className="flex justify-between items-center pt-3 border-t border-zinc-800 text-xs font-semibold text-zinc-400">
-                              <span className="text-red-400 font-bold bg-red-950/30 border border-red-900/60 px-2 py-0.5 rounded">Beds: {hosp.beds}</span>
+                            <div className="flex justify-between items-center pt-3 border-t border-border text-xs font-semibold text-muted-foreground">
+                              <span className="text-red-650 dark:text-red-400 font-bold bg-red-500/10 dark:bg-red-950/30 border border-red-500/20 dark:border-red-900/60 px-2 py-0.5 rounded">Beds: {hosp.beds}</span>
                               <div className="flex gap-1.5">
-                                <a href={`tel:${hosp.phone}`} className="px-2.5 py-1.5 border border-zinc-850 rounded-lg hover:bg-zinc-800 text-zinc-300 flex items-center gap-1">📞 Call</a>
-                                <a href={`https://www.google.com/maps/dir/?api=1&destination=${hosp.lat},${hosp.lng}`} target="_blank" rel="noreferrer" className="px-2.5 py-1.5 bg-white text-black rounded-lg hover:bg-zinc-200 transition-colors">Directions</a>
+                                <a href={`tel:${hosp.phone}`} className="px-2.5 py-1.5 border border-border rounded-lg hover:bg-muted text-foreground flex items-center gap-1">📞 Call</a>
+                                <a href={`https://www.google.com/maps/dir/?api=1&destination=${hosp.lat},${hosp.lng}`} target="_blank" rel="noreferrer" className="px-2.5 py-1.5 bg-foreground text-background rounded-lg hover:opacity-90 transition-opacity">Directions</a>
                               </div>
                             </div>
                           </div>
@@ -989,25 +989,25 @@ export default function Index() {
                   {/* Blood stock */}
                   {results.bloodBanks.length > 0 && (selectedResultTab === "all" || selectedResultTab === "blood") && (
                     <div className="space-y-3">
-                      <h3 className="text-sm font-bold flex items-center gap-2 text-zinc-300">
-                        <Droplet className="w-4 h-4 text-red-500" />
+                      <h3 className="text-sm font-bold flex items-center gap-2 text-foreground">
+                        <Droplet className="w-4 h-4 text-red-550 dark:text-red-500" />
                         Blood Bank Stock Inventories ({results.bloodBanks.length})
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {results.bloodBanks.slice(0, 4).map((bank) => (
-                          <div key={bank.id} className="bg-zinc-950 rounded-lg p-5 border border-zinc-900 space-y-4">
+                          <div key={bank.id} className="bg-card rounded-lg p-5 border border-border space-y-4">
                             <div className="flex justify-between items-start">
                               <div>
-                                <h4 className="text-sm font-bold text-white">{bank.name}</h4>
-                                <p className="text-xs text-zinc-500 flex items-center gap-1 mt-0.5">{bank.address}</p>
+                                <h4 className="text-sm font-bold text-foreground">{bank.name}</h4>
+                                <p className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5">{bank.address}</p>
                               </div>
-                              <a href={`tel:${bank.phone}`} className="p-1.5 rounded-lg border border-zinc-800 text-zinc-400 hover:bg-zinc-900 transition-colors">📞</a>
+                              <a href={`tel:${bank.phone}`} className="p-1.5 rounded-lg border border-border text-muted-foreground hover:bg-muted transition-colors">📞</a>
                             </div>
                             <div className="grid grid-cols-4 gap-1.5 text-center text-[9px] font-bold">
-                              <div className="p-1 rounded bg-red-950/20 border border-red-900/50 text-red-400">A+ ({bank.aPlus}U)</div>
-                              <div className="p-1 rounded bg-red-950/20 border border-red-900/50 text-red-400">B+ ({bank.bPlus}U)</div>
-                              <div className="p-1 rounded bg-red-950/20 border border-red-900/50 text-red-400">O- ({bank.oMinus}U)</div>
-                              <div className="p-1 rounded bg-red-950/20 border border-red-900/50 text-red-400">AB+ ({bank.abPlus}U)</div>
+                              <div className="p-1 rounded bg-red-500/10 border border-red-500/20 text-red-650 dark:bg-red-950/20 dark:border-red-900/50 dark:text-red-400">A+ ({bank.aPlus}U)</div>
+                              <div className="p-1 rounded bg-red-500/10 border border-red-500/20 text-red-650 dark:bg-red-950/20 dark:border-red-900/50 dark:text-red-400">B+ ({bank.bPlus}U)</div>
+                              <div className="p-1 rounded bg-red-500/10 border border-red-500/20 text-red-650 dark:bg-red-950/20 dark:border-red-900/50 dark:text-red-400">O- ({bank.oMinus}U)</div>
+                              <div className="p-1 rounded bg-red-500/10 border border-red-500/20 text-red-650 dark:bg-red-950/20 dark:border-red-900/50 dark:text-red-400">AB+ ({bank.abPlus}U)</div>
                             </div>
                           </div>
                         ))}
@@ -1018,21 +1018,21 @@ export default function Index() {
                   {/* Medicines */}
                   {results.medicines.length > 0 && (selectedResultTab === "all" || selectedResultTab === "medicine") && (
                     <div className="space-y-3">
-                      <h3 className="text-sm font-bold flex items-center gap-2 text-zinc-300">
-                        <Percent className="w-4 h-4 text-zinc-500" />
+                      <h3 className="text-sm font-bold flex items-center gap-2 text-foreground">
+                        <Percent className="w-4 h-4 text-muted-foreground" />
                         Generic Alternative Substitutes ({results.medicines.length})
                       </h3>
                       <div className="space-y-3">
                         {results.medicines.map((med) => (
-                          <div key={med.id} className="bg-zinc-950 rounded-lg p-5 border border-zinc-900 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                          <div key={med.id} className="bg-card rounded-lg p-5 border border-border flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                             <div>
-                              <h4 className="text-sm font-bold text-white">{med.name} / <span className="text-zinc-400 font-semibold">{med.genericName}</span></h4>
-                              <p className="text-xs text-zinc-500 mt-1">{med.description}</p>
+                              <h4 className="text-sm font-bold text-foreground">{med.name} / <span className="text-muted-foreground font-semibold">{med.genericName}</span></h4>
+                              <p className="text-xs text-muted-foreground mt-1">{med.description}</p>
                             </div>
                             <div className="text-right flex-shrink-0">
-                              <div className="text-xs text-zinc-500 line-through">Brand: ₹{med.brandPrice}</div>
-                              <div className="text-base font-extrabold text-green-500">Generic: ₹{med.genericPrice}</div>
-                              <div className="text-[9px] text-green-400 font-bold bg-green-950/20 border border-green-900/50 px-1.5 py-0.5 rounded mt-1">Save ₹{med.savings}</div>
+                              <div className="text-xs text-muted-foreground line-through">Brand: ₹{med.brandPrice}</div>
+                              <div className="text-base font-extrabold text-green-650 dark:text-green-550">Generic: ₹{med.genericPrice}</div>
+                              <div className="text-[9px] text-green-600 dark:text-green-400 font-bold bg-green-500/10 border border-green-500/20 dark:bg-green-950/20 dark:border-green-900/50 px-1.5 py-0.5 rounded mt-1">Save ₹{med.savings}</div>
                             </div>
                           </div>
                         ))}

@@ -33,9 +33,9 @@ export default function About() {
   ];
 
   return (
-    <div className="w-full min-h-screen bg-black text-zinc-105 flex flex-col font-sans grid-bg">
+    <div className="w-full min-h-screen bg-background text-foreground flex flex-col font-sans grid-bg">
       <Navigation />
-      <div className="pt-32 pb-24 flex-grow bg-black/60">
+      <div className="pt-32 pb-24 flex-grow bg-background/60">
         
         {/* Banner Section */}
         <section className="py-16 text-left max-w-6xl mx-auto px-6 sm:px-8">
@@ -47,10 +47,10 @@ export default function About() {
             <span className="text-xs font-semibold tracking-wider text-accent uppercase mb-3 block">
               India's Digital Health Mission
             </span>
-            <h1 className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight">
+            <h1 className="text-4xl sm:text-5xl font-extrabold text-foreground tracking-tight leading-tight">
               {t("about.title")}
             </h1>
-            <p className="text-sm text-zinc-400 leading-relaxed max-w-2xl pt-2">
+            <p className="text-sm text-muted-foreground leading-relaxed max-w-2xl pt-2">
               We are building the intelligent emergency response network for India, aligning technology and healthcare infrastructure to save lives when seconds matter.
             </p>
           </motion.div>
@@ -62,13 +62,13 @@ export default function About() {
             initial={{ opacity: 0, y: 12 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="bg-zinc-950 border border-zinc-900 rounded-lg p-8 shadow-2xl relative"
+            className="bg-card border border-border rounded-lg p-8 shadow-2xl relative"
           >
-            <div className="w-10 h-10 rounded bg-zinc-900 border border-zinc-800 text-zinc-200 flex items-center justify-center mb-6">
+            <div className="w-10 h-10 rounded bg-muted border border-border text-muted-foreground flex items-center justify-center mb-6">
               <Compass className="w-5 h-5 text-accent animate-pulse" />
             </div>
-            <h2 className="text-xl font-bold text-white mb-3">{t("about.mission")}</h2>
-            <p className="text-xs text-zinc-400 leading-relaxed font-medium">
+            <h2 className="text-xl font-bold text-foreground mb-3">{t("about.mission")}</h2>
+            <p className="text-xs text-muted-foreground leading-relaxed font-medium">
               To bridge the critical coordination gap in emergency response across India. By deploying real-time database lookups, instant location indexing, and localized clinical checks, we ensure that every citizen finds immediate aid, clean blood, and cheap generic alternatives without delay.
             </p>
           </motion.div>
@@ -77,27 +77,27 @@ export default function About() {
             initial={{ opacity: 0, y: 12 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="bg-zinc-950 border border-zinc-900 rounded-lg p-8 shadow-2xl relative"
+            className="bg-card border border-border rounded-lg p-8 shadow-2xl relative"
           >
-            <div className="w-10 h-10 rounded bg-zinc-900 border border-zinc-800 text-zinc-200 flex items-center justify-center mb-6">
+            <div className="w-10 h-10 rounded bg-muted border border-border text-muted-foreground flex items-center justify-center mb-6">
               <Award className="w-5 h-5 text-accent animate-pulse" />
             </div>
-            <h2 className="text-xl font-bold text-white mb-3">{t("about.vision")}</h2>
-            <p className="text-xs text-zinc-400 leading-relaxed font-medium">
+            <h2 className="text-xl font-bold text-foreground mb-3">{t("about.vision")}</h2>
+            <p className="text-xs text-muted-foreground leading-relaxed font-medium">
               To transform emergency care into a seamless, trusted, zero-friction experience. We envision a future where language barriers, search fragmentation, and drug pricing opacity are eliminated, establishing SwasthAI as India's primary health hub.
             </p>
           </motion.div>
         </section>
 
         {/* Statistics Metric Strip */}
-        <section className="bg-zinc-950/40 border-y border-zinc-900 py-12 my-12">
+        <section className="bg-card/40 border-y border-border py-12 my-12">
           <div className="max-w-6xl mx-auto px-6 sm:px-8 grid grid-cols-2 lg:grid-cols-4 gap-8">
             {metrics.map((m) => (
               <div key={m.label} className="text-left space-y-1.5">
-                <div className="text-3xl font-extrabold text-white">
+                <div className="text-3xl font-extrabold text-foreground">
                   {m.value}
                 </div>
-                <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">{m.label}</div>
+                <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">{m.label}</div>
               </div>
             ))}
           </div>
@@ -105,7 +105,7 @@ export default function About() {
 
         {/* Values Section */}
         <section className="max-w-6xl mx-auto px-6 sm:px-8 py-10">
-          <h2 className="text-2xl font-bold text-white text-center mb-10 tracking-tight">{t("about.values")}</h2>
+          <h2 className="text-2xl font-bold text-foreground text-center mb-10 tracking-tight">{t("about.values")}</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {values.map((v, index) => {
               const Icon = v.icon;
@@ -116,13 +116,13 @@ export default function About() {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.05 }}
                   viewport={{ once: true }}
-                  className="bg-zinc-950 border border-zinc-900 hover:border-zinc-800 rounded-lg p-6 shadow-2xl transition-all duration-200"
+                  className="bg-card border border-border hover:border-border/80 rounded-lg p-6 shadow-2xl transition-all duration-200"
                 >
-                  <div className="w-9 h-9 rounded bg-zinc-900 border border-zinc-800 text-zinc-200 flex items-center justify-center mb-4">
+                  <div className="w-9 h-9 rounded bg-muted border border-border text-muted-foreground flex items-center justify-center mb-4">
                     <Icon className="w-4.5 h-4.5 text-accent" />
                   </div>
-                  <h3 className="font-bold text-sm text-white mb-2">{v.title}</h3>
-                  <p className="text-xs text-zinc-400 leading-relaxed font-medium">{v.desc}</p>
+                  <h3 className="font-bold text-sm text-foreground mb-2">{v.title}</h3>
+                  <p className="text-xs text-muted-foreground leading-relaxed font-medium">{v.desc}</p>
                 </motion.div>
               );
             })}

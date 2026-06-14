@@ -63,19 +63,19 @@ export default function BloodBanks() {
   }, [bloodGroup, city, state]);
 
   return (
-    <div className="w-full min-h-screen bg-black text-zinc-100 flex flex-col grid-bg">
+    <div className="w-full min-h-screen bg-background text-foreground flex flex-col grid-bg">
       <Navigation />
-      <div className="pt-28 pb-16 flex-grow bg-black/60">
+      <div className="pt-28 pb-16 flex-grow bg-background/60">
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             className="text-center mb-10"
           >
-            <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white mb-3">
+            <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground mb-3">
               {t("blood_banks.title")}
             </h1>
-            <p className="text-xs text-zinc-400 max-w-lg mx-auto">
+            <p className="text-xs text-muted-foreground max-w-lg mx-auto">
               {t("blood_banks.search")}
             </p>
           </motion.div>
@@ -85,49 +85,49 @@ export default function BloodBanks() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.05 }}
-            className="bg-zinc-950 border border-zinc-900 rounded-xl p-5 mb-8 grid grid-cols-1 md:grid-cols-3 gap-4 shadow-2xl"
+            className="bg-card border border-border rounded-xl p-5 mb-8 grid grid-cols-1 md:grid-cols-3 gap-4 shadow-2xl"
           >
             <div>
-              <label className="block text-[10px] font-bold uppercase text-zinc-500 mb-2">
+              <label className="block text-[10px] font-bold uppercase text-muted-foreground mb-2">
                 {t("blood_banks.blood_group")}
               </label>
               <select
                 value={bloodGroup}
                 onChange={(e) => setBloodGroup(e.target.value)}
-                className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 outline-none text-white text-xs font-semibold focus:ring-1 focus:ring-zinc-700 focus:border-zinc-700"
+                className="w-full bg-muted border border-border rounded-lg px-3 py-2 outline-none text-foreground text-xs font-semibold focus:ring-1 focus:ring-ring focus:border-ring"
               >
                 {bloodGroups.map((bg) => (
-                  <option key={bg} value={bg}>{bg === "All" ? "Select All Types" : bg}</option>
+                  <option key={bg} value={bg} className="bg-card text-foreground">{bg === "All" ? "Select All Types" : bg}</option>
                 ))}
               </select>
             </div>
 
             <div>
-              <label className="block text-[10px] font-bold uppercase text-zinc-500 mb-2">
+              <label className="block text-[10px] font-bold uppercase text-muted-foreground mb-2">
                 State
               </label>
               <select
                 value={state}
                 onChange={(e) => setState(e.target.value)}
-                className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 outline-none text-white text-xs font-semibold focus:ring-1 focus:ring-zinc-700 focus:border-zinc-700"
+                className="w-full bg-muted border border-border rounded-lg px-3 py-2 outline-none text-foreground text-xs font-semibold focus:ring-1 focus:ring-ring focus:border-ring"
               >
                 {states.map((st) => (
-                  <option key={st} value={st}>{st === "All" ? "All States" : st}</option>
+                  <option key={st} value={st} className="bg-card text-foreground">{st === "All" ? "All States" : st}</option>
                 ))}
               </select>
             </div>
 
             <div>
-              <label className="block text-[10px] font-bold uppercase text-zinc-500 mb-2">
+              <label className="block text-[10px] font-bold uppercase text-muted-foreground mb-2">
                 City
               </label>
               <select
                 value={city}
                 onChange={(e) => setCity(e.target.value)}
-                className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 outline-none text-white text-xs font-semibold focus:ring-1 focus:ring-zinc-700 focus:border-zinc-700"
+                className="w-full bg-muted border border-border rounded-lg px-3 py-2 outline-none text-foreground text-xs font-semibold focus:ring-1 focus:ring-ring focus:border-ring"
               >
                 {cities.map((ct) => (
-                  <option key={ct} value={ct}>{ct === "All" ? "All Cities" : ct}</option>
+                  <option key={ct} value={ct} className="bg-card text-foreground">{ct === "All" ? "All Cities" : ct}</option>
                 ))}
               </select>
             </div>
@@ -136,14 +136,14 @@ export default function BloodBanks() {
           {/* Blood Banks Grid */}
           {loading ? (
             <div className="text-center py-12">
-              <div className="w-8 h-8 border-4 border-zinc-800 border-t-accent rounded-full animate-spin mx-auto mb-3" />
-              <p className="text-xs text-zinc-500">Searching blood stocks...</p>
+              <div className="w-8 h-8 border-4 border-border border-t-accent rounded-full animate-spin mx-auto mb-3" />
+              <p className="text-xs text-muted-foreground">Searching blood stocks...</p>
             </div>
           ) : bloodBanks.length === 0 ? (
-            <div className="text-center py-16 bg-zinc-950 border border-zinc-900 rounded-xl">
-              <Droplet className="w-10 h-10 text-zinc-650 mx-auto mb-3 animate-pulse" />
-              <h3 className="text-sm font-bold text-zinc-300 mb-1">No Blood Banks Found</h3>
-              <p className="text-xs text-zinc-500 max-w-xs mx-auto">
+            <div className="text-center py-16 bg-card border border-border rounded-xl">
+              <Droplet className="w-10 h-10 text-muted-foreground/60 mx-auto mb-3 animate-pulse" />
+              <h3 className="text-sm font-bold text-foreground mb-1">No Blood Banks Found</h3>
+              <p className="text-xs text-muted-foreground max-w-xs mx-auto">
                 We couldn't find any blood banks matching your filters. Try selecting a different location or blood group.
               </p>
             </div>
@@ -155,13 +155,13 @@ export default function BloodBanks() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.03 }}
-                  className="bg-zinc-950 rounded-xl p-5 border border-zinc-900 hover:border-zinc-800 transition-all shadow-2xl relative overflow-hidden"
+                  className="bg-card rounded-xl p-5 border border-border hover:border-border/80 transition-all shadow-2xl relative overflow-hidden"
                 >
                   <div className="flex justify-between items-start mb-4">
                      <div>
-                      <h3 className="text-base font-bold text-white mb-1">{bank.name}</h3>
-                      <p className="text-xs text-zinc-500 flex items-center gap-1">
-                        <MapPin className="w-3.5 h-3.5 flex-shrink-0 text-zinc-650" />
+                      <h3 className="text-base font-bold text-foreground mb-1">{bank.name}</h3>
+                      <p className="text-xs text-muted-foreground flex items-center gap-1">
+                        <MapPin className="w-3.5 h-3.5 flex-shrink-0 text-muted-foreground" />
                         {bank.address}
                       </p>
                     </div>
@@ -183,10 +183,10 @@ export default function BloodBanks() {
                         key={stock.type}
                         className={`flex flex-col items-center py-2 rounded-lg border text-center ${
                           bloodGroup === stock.type
-                            ? "bg-red-950/40 border-red-900/60 text-red-400 font-bold animate-pulse"
+                            ? "bg-red-500/10 border-red-500/20 text-red-650 dark:bg-red-950/40 dark:border-red-900/60 dark:text-red-400 font-bold animate-pulse"
                             : stock.qty > 0
-                            ? "bg-zinc-900 border-zinc-800 text-zinc-200 font-semibold"
-                            : "bg-zinc-900/20 border-zinc-950 text-zinc-600"
+                            ? "bg-muted border-border text-foreground font-semibold"
+                            : "bg-muted/20 border-border/40 text-muted-foreground/60"
                         }`}
                       >
                         <span className="text-[10px] font-semibold">{stock.type}</span>
@@ -197,9 +197,9 @@ export default function BloodBanks() {
                     ))}
                   </div>
 
-                  <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-zinc-900">
-                    <div className="flex items-center gap-1.5 text-zinc-400 text-xs font-medium">
-                      <Phone className="w-3.5 h-3.5 text-zinc-550" />
+                  <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-border">
+                    <div className="flex items-center gap-1.5 text-muted-foreground text-xs font-medium">
+                      <Phone className="w-3.5 h-3.5 text-muted-foreground" />
                       <span>{bank.phone}</span>
                     </div>
                     <div className="sm:ml-auto flex gap-2">
@@ -207,7 +207,7 @@ export default function BloodBanks() {
                         href={`https://www.google.com/maps/dir/?api=1&destination=${bank.lat},${bank.lng}`}
                         target="_blank"
                         rel="noreferrer"
-                        className="px-3 py-1.5 bg-white hover:bg-zinc-200 text-black text-xs font-bold rounded-lg transition-colors text-center flex items-center gap-1.5 shadow-sm"
+                        className="px-3 py-1.5 bg-foreground hover:bg-foreground/90 text-background text-xs font-bold rounded-lg transition-colors text-center flex items-center gap-1.5 shadow-sm"
                       >
                         <MapPin className="w-3.5 h-3.5" />
                         Get Directions

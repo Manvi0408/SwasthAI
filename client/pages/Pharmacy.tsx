@@ -83,9 +83,9 @@ export default function Pharmacy() {
   };
 
   return (
-    <div className="w-full min-h-screen bg-black text-zinc-100 flex flex-col font-sans grid-bg">
+    <div className="w-full min-h-screen bg-background text-foreground flex flex-col font-sans grid-bg">
       <Navigation />
-      <div className="pt-32 pb-24 flex-grow bg-black/60">
+      <div className="pt-32 pb-24 flex-grow bg-background/60">
         <div className="max-w-6xl mx-auto px-6 sm:px-8">
           
           {/* Header */}
@@ -98,10 +98,10 @@ export default function Pharmacy() {
             <span className="text-xs font-semibold tracking-wider text-accent uppercase mb-3 block">
               Savings & Subsidies
             </span>
-            <h1 className="text-4xl font-extrabold tracking-tight text-white mb-4 sm:text-5xl">
+            <h1 className="text-4xl font-extrabold tracking-tight text-foreground mb-4 sm:text-5xl">
               {t("pharmacy.title")}
             </h1>
-            <p className="text-sm text-zinc-400 max-w-2xl leading-relaxed">
+            <p className="text-sm text-muted-foreground max-w-2xl leading-relaxed">
               Compare branded medicine prices against affordable government-subsidized Jan Aushadhi generic alternatives and maximize your savings.
             </p>
           </motion.div>
@@ -112,26 +112,26 @@ export default function Pharmacy() {
             <div className="lg:col-span-2 space-y-6">
               
               {/* Search Bar */}
-              <div className="flex items-center space-x-3 bg-zinc-950 border border-zinc-900 rounded-lg px-4 py-3 shadow-2xl focus-within:border-zinc-805 transition-all">
-                <Search className="w-4 h-4 text-zinc-500" />
+              <div className="flex items-center space-x-3 bg-card border border-border rounded-lg px-4 py-3 shadow-2xl focus-within:border-border transition-all">
+                <Search className="w-4 h-4 text-muted-foreground" />
                 <input
                   type="text"
                   placeholder={t("pharmacy.search") + " (e.g. Paracetamol, Augmentin, Lipitor...)"}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="flex-1 bg-transparent text-white placeholder-zinc-550 outline-none text-sm"
+                  className="flex-1 bg-transparent text-foreground placeholder-muted-foreground outline-none text-sm"
                 />
               </div>
 
               {/* Medicine List */}
               {loading ? (
                 <div className="text-center py-16">
-                  <div className="w-6 h-6 border-2 border-zinc-800 border-t-accent rounded-full animate-spin mx-auto mb-3" />
-                  <p className="text-xs text-zinc-500">Searching medicines...</p>
+                  <div className="w-6 h-6 border-2 border-border border-t-accent rounded-full animate-spin mx-auto mb-3" />
+                  <p className="text-xs text-muted-foreground">Searching medicines...</p>
                 </div>
               ) : medicines.length === 0 ? (
-                <div className="text-center py-16 bg-zinc-950 border border-zinc-900 rounded-lg shadow-2xl">
-                  <p className="text-sm text-zinc-500 font-medium">No medicines found</p>
+                <div className="text-center py-16 bg-card border border-border rounded-lg shadow-2xl">
+                  <p className="text-sm text-muted-foreground font-medium">No medicines found</p>
                 </div>
               ) : (
                 <div className="space-y-4">
@@ -141,29 +141,29 @@ export default function Pharmacy() {
                       <motion.div
                         key={med.id}
                         onClick={() => setSelectedMed(med)}
-                        className={`bg-zinc-950 border rounded-lg p-5 cursor-pointer transition-all duration-200 hover:border-zinc-800 shadow-2xl flex flex-col sm:flex-row sm:items-start justify-between gap-4 ${
-                          isSelected ? "border-white ring-1 ring-white" : "border-zinc-900"
+                        className={`bg-card border rounded-lg p-5 cursor-pointer transition-all duration-200 hover:border-border/80 shadow-2xl flex flex-col sm:flex-row sm:items-start justify-between gap-4 ${
+                          isSelected ? "border-foreground ring-1 ring-foreground" : "border-border"
                         }`}
                       >
                         <div className="space-y-1.5 flex-1">
                           <div className="flex items-center gap-2 flex-wrap">
-                            <h3 className="text-base font-semibold text-white">{med.name}</h3>
-                            <span className="text-[10px] px-2 py-0.5 rounded bg-zinc-900 text-zinc-400 font-medium border border-zinc-800">
+                            <h3 className="text-base font-semibold text-foreground">{med.name}</h3>
+                            <span className="text-[10px] px-2 py-0.5 rounded bg-muted text-muted-foreground font-medium border border-border">
                               {med.category || "General"}
                             </span>
                           </div>
-                          <p className="text-xs text-zinc-400">
-                            {t("pharmacy.generic")}: <span className="font-semibold text-zinc-300">{med.genericName}</span>
+                          <p className="text-xs text-muted-foreground">
+                            {t("pharmacy.generic")}: <span className="font-semibold text-foreground">{med.genericName}</span>
                           </p>
                           {med.description && (
-                            <p className="text-xs text-zinc-500 mt-2 leading-relaxed max-w-xl">{med.description}</p>
+                            <p className="text-xs text-muted-foreground mt-2 leading-relaxed max-w-xl">{med.description}</p>
                           )}
                         </div>
 
-                        <div className="flex items-start gap-4 justify-between sm:justify-end sm:border-l border-zinc-900 sm:pl-6 pt-2 sm:pt-0">
+                        <div className="flex items-start gap-4 justify-between sm:justify-end sm:border-l border-border sm:pl-6 pt-2 sm:pt-0">
                           <div className="text-right flex flex-col items-end">
-                            <span className="text-xs text-zinc-550 line-through">₹{med.brandPrice.toFixed(2)}</span>
-                            <span className="text-lg font-bold text-white">₹{med.genericPrice.toFixed(2)}</span>
+                            <span className="text-xs text-muted-foreground/60 line-through">₹{med.brandPrice.toFixed(2)}</span>
+                            <span className="text-lg font-bold text-foreground">₹{med.genericPrice.toFixed(2)}</span>
                             <span className="text-[10px] font-bold text-green-400 bg-green-950/20 border border-green-900/50 px-1.5 py-0.5 rounded-md mt-1.5 flex items-center gap-0.5">
                               <Percent className="w-2.5 h-2.5" />
                               {calculateSavingsPercent(med.brandPrice, med.genericPrice)}% Save
@@ -179,8 +179,8 @@ export default function Pharmacy() {
 
             {/* Savings Calculator Widget */}
             <div className="space-y-6">
-              <div className="bg-zinc-950 border border-zinc-900 rounded-lg p-6 shadow-2xl">
-                <h3 className="text-sm font-semibold text-white mb-5 flex items-center gap-2 border-b border-zinc-900 pb-3">
+              <div className="bg-card border border-border rounded-lg p-6 shadow-2xl">
+                <h3 className="text-sm font-semibold text-foreground mb-5 flex items-center gap-2 border-b border-border pb-3">
                   <Sparkles className="w-4 h-4 text-accent animate-pulse" />
                   Monthly Savings Calculator
                 </h3>
@@ -188,25 +188,25 @@ export default function Pharmacy() {
                 {selectedMed ? (
                   <div className="space-y-5">
                     <div>
-                      <h4 className="text-xs font-semibold text-white mb-0.5">{selectedMed.name}</h4>
-                      <p className="text-[11px] text-zinc-500">Equivalent to: {selectedMed.genericName}</p>
+                      <h4 className="text-xs font-semibold text-foreground mb-0.5">{selectedMed.name}</h4>
+                      <p className="text-[11px] text-muted-foreground">Equivalent to: {selectedMed.genericName}</p>
                     </div>
 
-                    <div className="flex items-center justify-between border-y border-zinc-900 py-3.5">
-                      <span className="text-xs font-medium text-zinc-400">Packs / Month</span>
-                      <div className="flex items-center space-x-2 bg-zinc-905 border border-zinc-800 rounded-md p-1">
+                    <div className="flex items-center justify-between border-y border-border py-3.5">
+                      <span className="text-xs font-medium text-muted-foreground">Packs / Month</span>
+                      <div className="flex items-center space-x-2 bg-muted border border-border rounded-md p-1">
                         <button
                           type="button"
                           onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                          className="p-1 rounded hover:bg-zinc-800 text-zinc-400 transition-colors cursor-pointer"
+                          className="p-1 rounded hover:bg-muted/80 text-muted-foreground transition-colors cursor-pointer"
                         >
                           <Minus className="w-3.5 h-3.5" />
                         </button>
-                        <span className="font-semibold text-xs text-white w-6 text-center">{quantity}</span>
+                        <span className="font-semibold text-xs text-foreground w-6 text-center">{quantity}</span>
                         <button
                           type="button"
                           onClick={() => setQuantity(quantity + 1)}
-                          className="p-1 rounded hover:bg-zinc-800 text-zinc-400 transition-colors cursor-pointer"
+                          className="p-1 rounded hover:bg-muted/80 text-muted-foreground transition-colors cursor-pointer"
                         >
                           <Plus className="w-3.5 h-3.5" />
                         </button>
@@ -214,16 +214,16 @@ export default function Pharmacy() {
                     </div>
 
                     <div className="space-y-2">
-                      <div className="flex justify-between text-xs text-zinc-500">
+                      <div className="flex justify-between text-xs text-muted-foreground">
                         <span>Branded price ({quantity}x):</span>
                         <span className="line-through">₹{(selectedMed.brandPrice * quantity).toFixed(2)}</span>
                       </div>
-                      <div className="flex justify-between text-xs text-zinc-400">
+                      <div className="flex justify-between text-xs text-muted-foreground">
                         <span>Generic alternative ({quantity}x):</span>
-                        <span className="font-medium text-zinc-200">₹{(selectedMed.genericPrice * quantity).toFixed(2)}</span>
+                        <span className="font-medium text-foreground">₹{(selectedMed.genericPrice * quantity).toFixed(2)}</span>
                       </div>
-                      <div className="flex justify-between items-center pt-3 border-t border-zinc-900">
-                        <span className="text-xs font-bold text-zinc-300">Monthly Savings:</span>
+                      <div className="flex justify-between items-center pt-3 border-t border-border">
+                        <span className="text-xs font-bold text-foreground">Monthly Savings:</span>
                         <span className="text-xl font-extrabold text-green-400">₹{(selectedMed.savings * quantity).toFixed(2)}</span>
                       </div>
                     </div>
@@ -233,33 +233,33 @@ export default function Pharmacy() {
                     </div>
                   </div>
                 ) : (
-                  <p className="text-xs text-zinc-500 text-center py-8">Select a medicine to calculate savings.</p>
+                  <p className="text-xs text-muted-foreground text-center py-8">Select a medicine to calculate savings.</p>
                 )}
               </div>
             </div>
           </div>
 
           {/* Near Pharmacies List */}
-          <div className="border-t border-zinc-900 pt-16">
-            <h2 className="text-2xl font-bold tracking-tight text-white mb-2 flex items-center gap-2">
+          <div className="border-t border-border pt-16">
+            <h2 className="text-2xl font-bold tracking-tight text-foreground mb-2 flex items-center gap-2">
               <MapPin className="w-5 h-5 text-accent" />
               Nearby Jan Aushadhi Kendras
             </h2>
-            <p className="text-xs text-zinc-400 mb-8 max-w-2xl">
+            <p className="text-xs text-muted-foreground mb-8 max-w-2xl">
               Locate government-certified health centers and generic stores closest to you.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {pharmacies.map((store) => (
-                <div key={store.id} className="bg-zinc-950 border border-zinc-900 rounded-lg p-5 flex flex-col justify-between hover:border-zinc-800 transition-all shadow-2xl">
+                <div key={store.id} className="bg-card border border-border rounded-lg p-5 flex flex-col justify-between hover:border-border/80 transition-all shadow-2xl">
                   <div>
-                    <h4 className="text-sm font-semibold text-white mb-2">{store.name}</h4>
-                    <p className="text-xs text-zinc-450 flex items-start gap-1 leading-relaxed">
-                      <MapPin className="w-3.5 h-3.5 text-zinc-650 mt-0.5 flex-shrink-0" />
+                    <h4 className="text-sm font-semibold text-foreground mb-2">{store.name}</h4>
+                    <p className="text-xs text-muted-foreground/90 flex items-start gap-1 leading-relaxed">
+                      <MapPin className="w-3.5 h-3.5 text-muted-foreground/50 mt-0.5 flex-shrink-0" />
                       <span>{store.address}, {store.city}</span>
                     </p>
                   </div>
-                  <div className="flex items-center gap-2 mt-4 pt-3 border-t border-zinc-900 text-xs text-zinc-400">
-                    <Phone className="w-3.5 h-3.5 text-zinc-550" />
+                  <div className="flex items-center gap-2 mt-4 pt-3 border-t border-border text-xs text-muted-foreground">
+                    <Phone className="w-3.5 h-3.5 text-muted-foreground/75" />
                     <span>{store.phone}</span>
                   </div>
                 </div>
