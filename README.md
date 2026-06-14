@@ -6,18 +6,23 @@ SwasthAI is a production-ready, full-stack premium healthcare platform designed 
 
 ## 📸 Product Showcase
 
-### 1. Main Homepage & 3D Interactive Console
-![Main Homepage & 3D Showcase](docs/screenshots/1_dashboard_main.png)
+### 1. Main Homepage 
+<img width="1865" height="843" alt="home page" src="https://github.com/user-attachments/assets/d921b435-12d5-4b28-88a3-e6b72d26d3e2" />
+
+
 
 ### 2. Proximity-Sorted Hospital Bed Finder
-<img width="1920" height="878" alt="latest_hospital_beds_1781313035490" src="https://github.com/user-attachments/assets/e29c3b7d-86bd-4eaf-bceb-89b530f281f7" />
+<img width="1884" height="858" alt="hospitals" src="https://github.com/user-attachments/assets/b0d5537d-84d5-4929-a6db-d9102f4c821a" />
+
 
 
 ### 3. Interactive Proximity GIS Map
-![Interactive Leaflet Map](docs/screenshots/7_interactive_map.png)
+<img width="1863" height="862" alt="interactive map" src="https://github.com/user-attachments/assets/a6878cbd-d62a-4b67-997f-5d2c29a69e29" />
+
 
 ### 4. AI Medicine & Jan Aushadhi Savings Calculator
-![Medicine Savings Calculator](docs/screenshots/4_medicine_pricing.png)
+<img width="1890" height="865" alt="medicine" src="https://github.com/user-attachments/assets/4bc52e07-4224-4439-9b3c-2f1f408d1f26" />
+
 
 ---
 
