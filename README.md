@@ -1,5 +1,7 @@
 # SwasthAI: AI-Powered Premium Healthcare Operating System 🩺🇮🇳
 
+[![CI](https://github.com/Manvi0408/SwasthAI/actions/workflows/ci.yml/badge.svg)](https://github.com/Manvi0408/SwasthAI/actions/workflows/ci.yml)
+
 SwasthAI is a production-ready, full-stack premium healthcare platform designed to solve India's fragmented medical dispatch and resource routing problems. Built with an Apple Vision Pro-inspired glassmorphism interface, interactive 3D particle backgrounds, and real-time data sync, it provides instant access to proximity-sorted hospitals, blood bank lookups, generic medicine savings, and emergency SOS services.
 
 ---
@@ -122,6 +124,28 @@ Start the client + backend API server on a single port (`8080`):
 pnpm dev
 ```
 Open [http://localhost:8080](http://localhost:8080) in your browser.
+
+---
+
+## 🧪 Testing
+
+Unit tests run with Vitest:
+
+```bash
+pnpm test
+```
+
+The suite covers the **AI Triage Command Center** rules engine
+(`server/routes/triage.ts`) — the logic that turns a free-text symptom
+description into a severity, a recommended action, and a hospital-type routing:
+
+- High-severity emergencies (chest pain → **Cardiac Center**, stroke/trauma →
+  **Trauma Center**) with the right possible conditions
+- Medium-severity flu/infection routing and the Low-severity default
+- Case-insensitive keyword matching, missing-input validation (`400`), and
+  anonymous logging of each assessment
+
+Every push and pull request runs the suite in [GitHub Actions](.github/workflows/ci.yml).
 
 ---
 
