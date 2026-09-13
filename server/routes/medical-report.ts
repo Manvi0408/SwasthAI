@@ -7,7 +7,7 @@ const simulateAnalysis = (fileName: string, rawText?: string) => {
   
   if (name.includes("cbc") || name.includes("blood") || name.includes("hemoglobin") || name.includes("wbc")) {
     return {
-      extractedText: "Patient Name: Manvi Kumar | Test: Complete Blood Count (CBC) | Hemoglobin: 10.2 g/dL (Normal: 12.0-16.0) | WBC Count: 11,500 /mcL (Normal: 4,000-11,000) | Platelets: 250,000 /mcL | RBC: 4.1 Million/mcL",
+      extractedText: "Patient Name: [Sample Patient] | Test: Complete Blood Count (CBC) | Hemoglobin: 10.2 g/dL (Normal: 12.0-16.0) | WBC Count: 11,500 /mcL (Normal: 4,000-11,000) | Platelets: 250,000 /mcL | RBC: 4.1 Million/mcL",
       simpleExplanation: "Your blood test shows a slightly low level of hemoglobin (which carries oxygen in your red blood cells) and a slightly high white blood cell (WBC) count, which is the body's natural defense against stress or minor infections.",
       abnormalities: JSON.stringify([
         "Low Hemoglobin (10.2 g/dL) - Indicates mild anemia",
@@ -137,9 +137,11 @@ export const handleAnalyzeReport: RequestHandler = async (req, res) => {
           }
         };
 
-        const apiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`, {
+        // Security: send the key in a header, never in the URL query string
+        // (query strings leak into access logs, proxies, and browser history).
+        const apiRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent`, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json", "x-goog-api-key": geminiKey },
           body: JSON.stringify(payload)
         });
 
