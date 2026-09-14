@@ -14,7 +14,7 @@
 // live, and both return real resource data pulled from the tools.
 
 import { TOOLS, TOOL_MAP } from "./tools.js";
-import { wrapUntrusted, detectInjection } from "../security/guard.js";
+import { wrapUntrusted, detectInjectionLayered, guardOutput } from "../security/guard.js";
 
 export interface TraceStep {
   kind: "thought" | "tool_call" | "observation" | "final";
@@ -270,8 +270,11 @@ async function runGemini(
     const calls = parts.filter((p: any) => p.functionCall);
 
     if (calls.length === 0) {
-      const finalText = parts.map((p: any) => p.text).filter(Boolean).join(" ").trim();
-      trace.push({ kind: "final", text: finalText || c.action });
+      const raw = parts.map((p: any) => p.text).filter(Boolean).join(" ").trim();
+      // Output guardrail: never return unscanned model text to the user.
+      const out = guardOutput(raw || c.action);
+      if (out.flagged) trace.push({ kind: "thought", text: `Output guardrail flagged model response (${out.categories.join(", ")}); returning sanitized text.` });
+      trace.push({ kind: "final", text: out.sanitized || c.action });
       break;
     }
 
@@ -328,7 +331,7 @@ export async function runTriageAgent(
   symptoms: string,
   ctx: { city?: string; lat?: number; lng?: number } = {}
 ): Promise<AgentResult> {
-  const scan = detectInjection(symptoms);
+  const scan = detectInjectionLayered(symptoms);
   const guard = { injectionFlagged: scan.flagged, matches: scan.matches };
 
   const apiKey = process.env.GEMINI_API_KEY;

@@ -10,7 +10,7 @@
 // the eval is reproducible and free.
 
 import { runTriageAgent } from "../agent/triageAgent.js";
-import { detectInjection } from "../security/guard.js";
+import { detectInjection, detectInjectionLayered } from "../security/guard.js";
 import { TRIAGE_CASES, INJECTION_CASES } from "./dataset.js";
 
 const GREEN = "\x1b[32m";
@@ -85,36 +85,64 @@ async function evalTriage() {
   return { pass, failures };
 }
 
-async function evalInjection() {
-  let attacks = 0;
-  let caught = 0;
-  let benign = 0;
-  let falsePos = 0;
-  const failures: string[] = [];
+type Detector = (t: string) => { flagged: boolean };
+
+function scoreDetector(detector: Detector) {
+  let attacks = 0, caught = 0, benign = 0, falsePos = 0;
+  const missed: string[] = [];
+  const byTech: Record<string, { total: number; caught: number }> = {};
 
   for (const c of INJECTION_CASES) {
-    const flagged = detectInjection(c.text).flagged;
+    const flagged = detector(c.text).flagged;
     if (c.isAttack) {
       attacks++;
-      if (flagged) caught++;
-      else failures.push(`${c.id} MISSED ATTACK: "${c.text}"`);
+      byTech[c.technique] ??= { total: 0, caught: 0 };
+      byTech[c.technique].total++;
+      if (flagged) {
+        caught++;
+        byTech[c.technique].caught++;
+      } else {
+        missed.push(`${c.id} [${c.technique}] "${c.text.slice(0, 60)}"`);
+      }
     } else {
       benign++;
-      if (flagged) {
-        falsePos++;
-        failures.push(`${c.id} FALSE POSITIVE: "${c.text}"`);
-      }
+      if (flagged) falsePos++;
     }
   }
+  return {
+    attacks, caught, benign, falsePos, missed, byTech,
+    catchRate: attacks ? caught / attacks : 1,
+    fpRate: benign ? falsePos / benign : 0,
+  };
+}
 
-  const catchRate = attacks ? caught / attacks : 1;
-  const fpRate = benign ? falsePos / benign : 0;
+function evalInjection() {
+  const naive = scoreDetector(detectInjection);
+  const layered = scoreDetector(detectInjectionLayered);
 
-  console.log(`\n${BOLD}━━ Prompt-Injection Red-Team (${INJECTION_CASES.length} cases) ━━${RESET}`);
-  console.log(`  Attack catch rate    ${caught}/${attacks}  ${pct(caught, attacks)}   ${bar(catchRate >= THRESHOLDS.injectionCatch)}`);
-  console.log(`  False-positive rate  ${falsePos}/${benign}  ${pct(falsePos, benign)}   ${bar(fpRate <= THRESHOLDS.falsePositiveMax)}  ${DIM}(benign wrongly flagged)${RESET}`);
+  console.log(`\n${BOLD}━━ Prompt-Injection Red-Team (${INJECTION_CASES.length} cases: ${naive.attacks} attacks, ${naive.benign} benign) ━━${RESET}`);
+  console.log(`  ${DIM}Detector            Catch rate     False-positive${RESET}`);
+  console.log(`  Naive regex (before) ${String(naive.caught + "/" + naive.attacks).padEnd(7)} ${pct(naive.caught, naive.attacks).padStart(4)}   ${pct(naive.falsePos, naive.benign)}`);
+  console.log(`  Layered (after)      ${String(layered.caught + "/" + layered.attacks).padEnd(7)} ${pct(layered.caught, layered.attacks).padStart(4)}   ${pct(layered.falsePos, layered.benign)}   ${bar(layered.catchRate >= THRESHOLDS.injectionCatch && layered.fpRate <= THRESHOLDS.falsePositiveMax)}`);
+  const delta = Math.round((layered.catchRate - naive.catchRate) * 100);
+  console.log(`  ${BOLD}Δ improvement        +${delta} pts${RESET}`);
 
-  const pass = catchRate >= THRESHOLDS.injectionCatch && fpRate <= THRESHOLDS.falsePositiveMax;
+  console.log(`\n  ${DIM}Catch rate by evasion technique (naive → layered):${RESET}`);
+  for (const tech of Object.keys(layered.byTech)) {
+    const n = naive.byTech[tech] ?? { total: 0, caught: 0 };
+    const l = layered.byTech[tech];
+    console.log(`    ${tech.padEnd(13)} ${pct(n.caught, n.total).padStart(4)} → ${pct(l.caught, l.total).padStart(4)}  (${l.caught}/${l.total})`);
+  }
+
+  const failures: string[] = [];
+  if (layered.missed.length) {
+    console.log(`\n  ${DIM}Layered defense still misses (documented gaps → future model-based layer):${RESET}`);
+    for (const m of layered.missed) console.log(`    ${RED}✗${RESET} ${m}`);
+  }
+  if (layered.fpRate > THRESHOLDS.falsePositiveMax) failures.push(`Layered false-positive rate ${pct(layered.falsePos, layered.benign)} exceeds threshold`);
+  if (layered.catchRate < THRESHOLDS.injectionCatch) failures.push(`Layered catch rate ${pct(layered.caught, layered.attacks)} below threshold`);
+
+  const pass = layered.catchRate >= THRESHOLDS.injectionCatch && layered.fpRate <= THRESHOLDS.falsePositiveMax;
   return { pass, failures };
 }
 
