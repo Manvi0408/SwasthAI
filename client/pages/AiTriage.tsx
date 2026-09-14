@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { Send, AlertTriangle, Activity, Stethoscope, Info, Upload, FileText, CheckCircle } from "lucide-react";
+import { Send, AlertTriangle, Activity, Stethoscope, Info, Upload, FileText, CheckCircle, Cpu, Wrench, Eye, ShieldCheck, ShieldAlert, Droplet, Building2, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 
 interface Condition {
@@ -12,11 +12,27 @@ interface Condition {
   description: string;
 }
 
+interface TraceStep {
+  kind: "thought" | "tool_call" | "observation" | "final";
+  text?: string;
+  tool?: string;
+  args?: Record<string, any>;
+  summary?: string;
+}
+
 interface TriageResult {
   possibleConditions: Condition[];
   severity: string;
   action: string;
   hospitalType: string;
+  trace?: TraceStep[];
+  resources?: {
+    hospitals?: { count: number; hospitals: any[] };
+    blood?: { bloodGroup: string; available: boolean; totalUnits: number; banks: any[] };
+    medicine?: { count: number; medicines: any[] };
+  };
+  engine?: "gemini" | "deterministic";
+  guard?: { injectionFlagged: boolean; matches: string[] };
 }
 
 export default function AiTriage() {
@@ -247,10 +263,110 @@ export default function AiTriage() {
                     animate={{ opacity: 1, y: 0 }}
                     className="bg-card border border-border rounded-lg p-6 shadow-2xl space-y-6"
                   >
-                    <h3 className="text-sm font-semibold text-foreground border-b border-border pb-3 flex items-center gap-2">
-                      <Activity className="w-4 h-4 text-accent animate-pulse" />
-                      {t("triage.analysis")} Results
+                    <h3 className="text-sm font-semibold text-foreground border-b border-border pb-3 flex items-center justify-between gap-2">
+                      <span className="flex items-center gap-2">
+                        <Activity className="w-4 h-4 text-accent animate-pulse" />
+                        {t("triage.analysis")} Results
+                      </span>
+                      {symptomsResult.engine && (
+                        <span className="inline-flex items-center gap-1 text-[9px] font-bold uppercase tracking-wider px-2 py-1 rounded border border-border bg-muted text-muted-foreground">
+                          <Cpu className="w-3 h-3 text-accent" />
+                          {symptomsResult.engine === "gemini" ? "Gemini Agent" : "Agent (rule engine)"}
+                        </span>
+                      )}
                     </h3>
+
+                    {/* Prompt-injection guard notice */}
+                    {symptomsResult.guard?.injectionFlagged && (
+                      <div className="p-3 rounded-lg border border-red-500/30 bg-red-500/10 text-red-600 dark:text-red-400 text-[11px] flex items-start gap-2">
+                        <ShieldAlert className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                        <span>
+                          <b>Prompt-injection guard triggered.</b> Suspicious instructions were detected in the input and neutralized — the text was treated strictly as data.
+                        </span>
+                      </div>
+                    )}
+
+                    {/* Agent reasoning trace */}
+                    {symptomsResult.trace && symptomsResult.trace.length > 0 && (
+                      <div className="space-y-3">
+                        <h4 className="font-semibold text-xs text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
+                          <Sparkles className="w-3.5 h-3.5 text-accent" /> Agent Reasoning Trace
+                        </h4>
+                        <div className="space-y-2 border-l-2 border-border pl-4">
+                          {symptomsResult.trace.map((step, i) => {
+                            const meta =
+                              step.kind === "thought"
+                                ? { icon: <Cpu className="w-3.5 h-3.5 text-accent" />, label: "Thought", body: step.text }
+                                : step.kind === "tool_call"
+                                ? { icon: <Wrench className="w-3.5 h-3.5 text-amber-500" />, label: `Tool call · ${step.tool}`, body: JSON.stringify(step.args ?? {}) }
+                                : step.kind === "observation"
+                                ? { icon: <Eye className="w-3.5 h-3.5 text-blue-500" />, label: `Observation · ${step.tool}`, body: step.summary }
+                                : { icon: <CheckCircle className="w-3.5 h-3.5 text-green-500" />, label: "Decision", body: step.text };
+                            return (
+                              <motion.div
+                                key={i}
+                                initial={{ opacity: 0, x: -6 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: i * 0.08 }}
+                                className="relative"
+                              >
+                                <div className="flex items-center gap-1.5 mb-0.5">
+                                  {meta.icon}
+                                  <span className="text-[10px] font-bold uppercase tracking-wider text-foreground">{meta.label}</span>
+                                </div>
+                                <p className={`text-[11px] leading-relaxed ${step.kind === "tool_call" ? "font-mono text-muted-foreground" : "text-foreground"}`}>
+                                  {meta.body}
+                                </p>
+                              </motion.div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Live routed resources (pulled from the DB by the agent's tools) */}
+                    {(symptomsResult.resources?.hospitals?.hospitals?.length || symptomsResult.resources?.blood) && (
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {symptomsResult.resources?.hospitals?.hospitals?.[0] && (
+                          <div className="p-4 rounded-lg border border-border bg-muted/40 space-y-1">
+                            <h4 className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+                              <Building2 className="w-3.5 h-3.5 text-accent" /> Routed Facility (live beds)
+                            </h4>
+                            {(() => {
+                              const h = symptomsResult.resources!.hospitals!.hospitals[0];
+                              return (
+                                <>
+                                  <p className="text-sm font-bold text-foreground">{h.name}</p>
+                                  <p className="text-[11px] text-muted-foreground">
+                                    {h.type} · {h.icuBeds} ICU · {h.emergencyBeds} ER · {h.ventilatorBeds} vent
+                                    {h.distanceKm != null ? ` · ${h.distanceKm} km` : ""}
+                                  </p>
+                                  <p className="text-[11px] font-semibold text-foreground">☎ {h.phone}</p>
+                                </>
+                              );
+                            })()}
+                          </div>
+                        )}
+                        {symptomsResult.resources?.blood && (
+                          <div className="p-4 rounded-lg border border-border bg-muted/40 space-y-1">
+                            <h4 className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+                              <Droplet className="w-3.5 h-3.5 text-red-500" /> Blood Stock Check
+                            </h4>
+                            <p className="text-sm font-bold text-foreground">
+                              {symptomsResult.resources.blood.bloodGroup}:{" "}
+                              {symptomsResult.resources.blood.available
+                                ? `${symptomsResult.resources.blood.totalUnits} units available`
+                                : "None nearby"}
+                            </p>
+                            {symptomsResult.resources.blood.banks?.[0] && (
+                              <p className="text-[11px] text-muted-foreground">
+                                Nearest: {symptomsResult.resources.blood.banks[0].name} ({symptomsResult.resources.blood.banks[0].units} units)
+                              </p>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    )}
 
                     {/* Triage Metas */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
